@@ -1,0 +1,9 @@
+.env
+*.xlsx
+*.pyc
+__pycache__/
+deploy.py
+import_quiz_api.py
+quiz-data.json
+*.json
+node_modules/
