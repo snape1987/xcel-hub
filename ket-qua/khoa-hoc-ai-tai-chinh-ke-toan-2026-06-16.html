@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Ứng Dụng trong Tài Chính – Kế Toán · Xcel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Be Vietnam Pro', 'sans-serif'] },
+      colors: {
+        brand: { 50:'#f5f3ff', 100:'#ede9fe', 200:'#ddd6fe', 300:'#c4b5fd', 400:'#a78bfa', 500:'#8b5cf6', 600:'#7c3aed', 700:'#6d28d9', 800:'#5b21b6', 900:'#4c1d95' },
+        blue: { 600:'#2563eb', 700:'#1d4ed8' },
+        ink: { DEFAULT:'#1a1033', muted:'#6b7280', light:'#9ca3af' },
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: 'Be Vietnam Pro', sans-serif; background: #faf9ff; color: #1a1033; }
+  .gradient-hero { background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 30%, #2563eb 100%); }
+  .gradient-bar  { background: linear-gradient(90deg, #6d28d9 0%, #2563eb 100%); }
+  .gradient-soft { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); }
+  .session-am { background: #fef9c3; border-left: 4px solid #f59e0b; }
+  .session-pm { background: #dbeafe; border-left: 4px solid #2563eb; }
+  .session-break { background: #f0fdf4; border-left: 4px solid #22c55e; font-style: italic; }
+  .outcome-card { border-left: 3px solid #7c3aed; }
+  .need-row:nth-child(even) { background: #f5f3ff; }
+  .need-row:hover { background: #ede9fe; transition: background 0.15s; }
+  .agenda-row:nth-child(even) td { background: #f5f3ff; }
+  .agenda-row:hover td { background: #ede9fe; transition: background 0.15s; }
+  .tag { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 600; padding: 2px 10px; border-radius: 9999px; }
+  .tag-am  { background: #fef3c7; color: #92400e; }
+  .tag-pm  { background: #dbeafe; color: #1e40af; }
+  .tag-demo { background: #ede9fe; color: #5b21b6; }
+  .tag-lecture { background: #f0fdf4; color: #166534; }
+  .tool-pill { display: inline-block; background: #1a1033; color: #e9d5ff; font-size: 0.65rem; font-weight: 600; padding: 1px 8px; border-radius: 9999px; white-space: nowrap; }
+
+  @media print {
+    .no-print { display: none !important; }
+    @page { margin: 12mm; size: A4; }
+    body { background: #fff; }
+  }
+  @media (max-width: 640px) {
+    .hide-mobile { display: none; }
+    table { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="no-print sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
+  <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+    <a href="https://xcel.vn" class="flex items-center gap-2 font-bold text-brand-700 text-lg">
+      <svg viewBox="0 0 32 32" fill="none" class="w-7 h-7"><path d="M5 5 L16 16 L27 5 M5 27 L16 16 L27 27" stroke="#6d28d9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Xcel
+    </a>
+    <div class="flex items-center gap-4">
+      <a href="https://xcel.vn/khoa-hoc" class="text-sm text-ink/70 hover:text-brand-700 transition-colors">Khóa học</a>
+      <a href="mailto:giang@xcel.vn" class="text-sm bg-brand-700 text-white px-4 py-1.5 rounded-lg hover:bg-brand-800 transition-colors font-medium">Đăng ký</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="gradient-hero text-white px-6 pt-16 pb-14">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex flex-wrap gap-2 mb-5">
+      <span class="tag bg-white/15 text-white">01 ngày · 6 tiếng</span>
+      <span class="tag bg-white/15 text-white">Hands-on + Demo</span>
+      <span class="tag bg-yellow-400/20 text-yellow-200">Đào tạo doanh nghiệp</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight mb-4">
+      AI Ứng Dụng trong<br>Tài Chính – Kế Toán
+    </h1>
+    <p class="text-purple-200 text-lg max-w-2xl leading-relaxed mb-8">
+      AI hỗ trợ tăng tốc các tác vụ thủ công TC-KT, kết hợp tư duy chuẩn hóa để khai thác AI bền vững và nhân rộng trong đội nhóm.
+    </p>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="bg-white/10 rounded-xl p-4">
+        <div class="text-white/60 text-xs font-semibold uppercase tracking-wide mb-1">Đối tượng</div>
+        <div class="font-bold text-sm">Kế toán + TC Quản trị</div>
+      </div>
+      <div class="bg-white/10 rounded-xl p-4">
+        <div class="text-white/60 text-xs font-semibold uppercase tracking-wide mb-1">Thời lượng</div>
+        <div class="font-bold text-sm">01 ngày · 6 tiếng</div>
+      </div>
+      <div class="bg-white/10 rounded-xl p-4">
+        <div class="text-white/60 text-xs font-semibold uppercase tracking-wide mb-1">Hình thức</div>
+        <div class="font-bold text-sm">Demo + Hands-on</div>
+      </div>
+      <div class="bg-white/10 rounded-xl p-4">
+        <div class="text-white/60 text-xs font-semibold uppercase tracking-wide mb-1">Phụ trách</div>
+        <div class="font-bold text-sm">Ms. Giang · Xcel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: 4 NHU CẦU -->
+<section class="max-w-4xl mx-auto px-6 py-14">
+  <div class="mb-2">
+    <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Bài toán thực tế</span>
+  </div>
+  <h2 class="text-2xl font-black mb-2">04 Nhóm Việc TC-KT Được Giải Quyết</h2>
+  <p class="text-ink/60 mb-8">Khóa học tập trung trực tiếp vào 4 nhóm tác vụ thủ công phổ biến nhất của đội Tài chính – Kế toán doanh nghiệp.</p>
+
+  <div class="rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+    <div class="grid grid-cols-12 bg-brand-900 text-white text-xs font-bold uppercase tracking-wide px-5 py-3">
+      <div class="col-span-1">#</div>
+      <div class="col-span-3">Nhóm việc</div>
+      <div class="col-span-4">Hiện trạng</div>
+      <div class="col-span-4">Kỳ vọng từ AI</div>
+    </div>
+    <!-- Row 1 -->
+    <div class="need-row grid grid-cols-12 px-5 py-4 gap-2 items-start border-b border-gray-100">
+      <div class="col-span-1 font-black text-brand-600 text-lg">1</div>
+      <div class="col-span-3">
+        <div class="font-bold text-sm">Check lỗi HĐ phần mềm</div>
+        <div class="text-xs text-ink/50 mt-0.5">Team Kế toán</div>
+      </div>
+      <div class="col-span-4 text-sm text-ink/70 leading-relaxed">Đối chiếu thời hạn, gói HĐ, giá bán trên Google Sheets → vào CRM sửa thủ công.</div>
+      <div class="col-span-4 text-sm leading-relaxed">AI phát hiện 3 nhóm lỗi (thời hạn / gói / giá) → xuất danh sách lỗi. Claude viết VBA macro để team chạy hàng loạt.</div>
+    </div>
+    <!-- Row 2 -->
+    <div class="need-row grid grid-cols-12 px-5 py-4 gap-2 items-start border-b border-gray-100">
+      <div class="col-span-1 font-black text-brand-600 text-lg">2</div>
+      <div class="col-span-3">
+        <div class="font-bold text-sm">Review HĐ vs Budget</div>
+        <div class="text-xs text-ink/50 mt-0.5">Team TC Quản trị</div>
+      </div>
+      <div class="col-span-4 text-sm text-ink/70 leading-relaxed">Review HĐ mua sắm thủ công, đối chiếu Budget năm. Dễ bỏ sót điều khoản gia hạn tự động.</div>
+      <div class="col-span-4 text-sm leading-relaxed">AI trích xuất từ HĐ: chi phí, thời hạn, vendor, điều khoản TT, số tiền, lưu ý — so sánh Budget, phát hiện chênh lệch & sai sót.</div>
+    </div>
+    <!-- Row 3 -->
+    <div class="need-row grid grid-cols-12 px-5 py-4 gap-2 items-start border-b border-gray-100">
+      <div class="col-span-1 font-black text-brand-600 text-lg">3</div>
+      <div class="col-span-3">
+        <div class="font-bold text-sm">Wording báo cáo</div>
+        <div class="text-xs text-ink/50 mt-0.5">Team TC Quản trị</div>
+      </div>
+      <div class="col-span-4 text-sm text-ink/70 leading-relaxed">Sau khi làm báo cáo Excel cần gõ thuyết minh ("Doanh thu đạt xx tỷ tăng xx%…"). Mất thời gian gõ lại số liệu.</div>
+      <div class="col-span-4 text-sm leading-relaxed">AI draft trước thuyết minh từ bảng số liệu, đồng thời phát hiện các sai lệch nếu có để cảnh báo.</div>
+    </div>
+    <!-- Row 4 -->
+    <div class="need-row grid grid-cols-12 px-5 py-4 gap-2 items-start">
+      <div class="col-span-1 font-black text-brand-600 text-lg">4</div>
+      <div class="col-span-3">
+        <div class="font-bold text-sm">Phân tích data ~1tr dòng</div>
+        <div class="text-xs text-ink/50 mt-0.5">Team TC Quản trị</div>
+      </div>
+      <div class="col-span-4 text-sm text-ink/70 leading-relaxed">Data chi tiết HĐ, merchant — đã chuẩn, dùng phân tích ngay. Excel chạm giới hạn.</div>
+      <div class="col-span-4 text-sm leading-relaxed">Gợi ý công cụ quản lý + cách AI làm việc với data offline ~1 triệu dòng để phân tích nhanh.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: CÁCH TIẾP CẬN -->
+<section class="gradient-soft py-14 px-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-2"><span class="text-xs font-bold uppercase tracking-widest text-brand-600">Phương pháp</span></div>
+    <h2 class="text-2xl font-black mb-8">Cách Tiếp Cận · 50% Tư Duy + 50% Ứng Dụng</h2>
+    <div class="grid sm:grid-cols-2 gap-6">
+      <!-- Left -->
+      <div class="bg-white rounded-2xl p-7 shadow-sm border border-brand-100">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center">
+            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          </div>
+          <div>
+            <div class="font-black text-lg">50%</div>
+            <div class="text-xs font-bold uppercase tracking-wide text-amber-700">Tư duy chuẩn hóa</div>
+          </div>
+        </div>
+        <ul class="space-y-2.5">
+          <li class="flex items-start gap-2 text-sm"><span class="text-amber-500 mt-0.5">›</span><span>Định nghĩa bài toán: input – rule – output</span></li>
+          <li class="flex items-start gap-2 text-sm"><span class="text-amber-500 mt-0.5">›</span><span>Xây bộ rule check / khung review hợp đồng</span></li>
+          <li class="flex items-start gap-2 text-sm"><span class="text-amber-500 mt-0.5">›</span><span>Cấu trúc thuyết minh báo cáo chuẩn</span></li>
+          <li class="flex items-start gap-2 text-sm"><span class="text-amber-500 mt-0.5">›</span><span>Khi nào dùng AI · Khi nào dùng VBA/PQ · Khi nào thủ công</span></li>
+        </ul>
+      </div>
+      <!-- Right -->
+      <div class="bg-white rounded-2xl p-7 shadow-sm border border-brand-100">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-12 h-12 rounded-xl bg-brand-50 border border-brand-200 flex items-center justify-center">
+            <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div>
+            <div class="font-black text-lg">50%</div>
+            <div class="text-xs font-bold uppercase tracking-wide text-brand-700">Ứng dụng AI tăng tốc</div>
+          </div>
+        </div>
+        <ul class="space-y-2.5">
+          <li class="flex items-start gap-2 text-sm"><span class="text-brand-500 mt-0.5">›</span><span>Claude chuyên sâu — Office, Cowork, Design</span></li>
+          <li class="flex items-start gap-2 text-sm"><span class="text-brand-500 mt-0.5">›</span><span>So sánh Claude / Gemini / ChatGPT / Microsoft Copilot 365</span></li>
+          <li class="flex items-start gap-2 text-sm"><span class="text-brand-500 mt-0.5">›</span><span>Claude viết VBA cho bài Check lỗi HĐ — chạy hàng loạt</span></li>
+          <li class="flex items-start gap-2 text-sm"><span class="text-brand-500 mt-0.5">›</span><span>Claude viết Power Query + phân tích data ~1tr dòng offline</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: AGENDA CHI TIẾT -->
+<section class="max-w-4xl mx-auto px-6 py-14">
+  <div class="mb-2"><span class="text-xs font-bold uppercase tracking-widest text-brand-600">Lịch trình</span></div>
+  <h2 class="text-2xl font-black mb-2">Agenda Chi Tiết · 01 Ngày · 06 Tiếng</h2>
+  <p class="text-ink/60 mb-8">Buổi sáng tập trung tư duy và phân tích bài toán thực tế. Buổi chiều thực hành trực tiếp với AI.</p>
+
+  <div class="space-y-3">
+
+    <!-- BUỔI SÁNG header -->
+    <div class="session-am rounded-xl px-5 py-3 flex items-center justify-between">
+      <div class="font-black text-amber-900">BUỔI SÁNG · 8:30 – 11:30</div>
+      <div class="text-xs font-bold text-amber-700 uppercase tracking-wide">Tư duy chuẩn hóa & Giải bài (50%)</div>
+    </div>
+
+    <!-- Row 8:30 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2 sm:col-span-2">
+          <div class="text-xs font-mono text-ink/50">8:30–8:50</div>
+          <span class="tag tag-am mt-1">Khai giảng</span>
+        </div>
+        <div class="col-span-10">
+          <div class="font-bold text-sm mb-1.5">Khai giảng & Cách tiếp cận</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Định vị: AI hỗ trợ tăng tốc, chuẩn hóa để dùng bền vững</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Map 04 nhóm việc TC-KT vào use case · Bảo mật dữ liệu</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 8:50 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">8:50–9:35</div>
+          <span class="tag tag-lecture mt-1">Lý thuyết</span>
+        </div>
+        <div class="col-span-10">
+          <div class="font-bold text-sm mb-1.5">Khung chuẩn hóa quy trình TC-KT</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Định nghĩa bài toán: input – rule – output</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Khi nào AI vào được, khi nào dùng VBA/Power Query</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Thiết kế output chuẩn cho người vận hành tiếp theo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 9:35 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">9:35–10:20</div>
+          <span class="tag tag-demo mt-1">Case thực</span>
+        </div>
+        <div class="col-span-8">
+          <div class="font-bold text-sm mb-1.5">Bài 1: Check lỗi hợp đồng kế toán · Team KT</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Phân tích logic 3 lỗi: thời hạn / gói HĐ / giá bán</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Xây bộ rule check để áp dụng lặp lại theo batch</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Output: danh sách lỗi → team CRM vào sửa</li>
+          </ul>
+        </div>
+        <div class="col-span-2 text-right">
+          <span class="tool-pill">Excel</span><br>
+          <span class="tool-pill mt-1">GG Sheet</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Break -->
+    <div class="session-break rounded-xl px-5 py-2.5 text-sm text-green-800 font-medium">
+      ☕ 10:20 – 10:35 · Nghỉ giải lao
+    </div>
+
+    <!-- Row 10:35 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">10:35–11:30</div>
+          <span class="tag tag-demo mt-1">Case thực</span>
+        </div>
+        <div class="col-span-10">
+          <div class="font-bold text-sm mb-1.5">Bài 2 & 3: Review HĐ vs Budget + Wording · Team TCQT</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Khung trích xuất HĐ: chi phí, thời hạn, vendor, điều khoản, lưu ý</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Cách đối chiếu Budget năm, phát hiện chênh lệch & rủi ro</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Cấu trúc thuyết minh: mô tả → so sánh → nhận định → cảnh báo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lunch -->
+    <div class="session-break rounded-xl px-5 py-2.5 text-sm text-green-800 font-medium">
+      🍱 11:30 – 13:30 · Nghỉ trưa
+    </div>
+
+    <!-- BUỔI CHIỀU header -->
+    <div class="session-pm rounded-xl px-5 py-3 flex items-center justify-between mt-4">
+      <div class="font-black text-blue-900">BUỔI CHIỀU · 13:30 – 16:30</div>
+      <div class="text-xs font-bold text-blue-700 uppercase tracking-wide">Ứng dụng AI tăng tốc (50%)</div>
+    </div>
+
+    <!-- Row 13:30 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">13:30–14:00</div>
+          <span class="tag tag-demo mt-1">Demo</span>
+        </div>
+        <div class="col-span-8">
+          <div class="font-bold text-sm mb-1.5">Tổng quan 4 AI & Demo so sánh song song</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Giới thiệu Claude (chính), Gemini, ChatGPT, Microsoft Copilot 365</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Cùng 1 prompt → 4 AI khác nhau cho bài Wording & Trích xuất HĐ</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Bảng quyết định: nghiệp vụ nào dùng AI nào</li>
+          </ul>
+        </div>
+        <div class="col-span-2 text-right space-y-1">
+          <span class="tool-pill">Claude</span><br>
+          <span class="tool-pill">Gemini</span><br>
+          <span class="tool-pill">Copilot</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 14:00 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">14:00–14:50</div>
+          <span class="tag tag-demo mt-1">Hands-on</span>
+        </div>
+        <div class="col-span-8">
+          <div class="font-bold text-sm mb-1.5">Claude chuyên sâu · Khai thác đặc thù</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Claude trong Office: làm việc trực tiếp trên file Excel/Word</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Cowork — không gian làm việc dài hạn với AI (Claude Pro)</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Claude Design — sinh hình ảnh, sơ đồ minh họa cho báo cáo</li>
+          </ul>
+        </div>
+        <div class="col-span-2 text-right">
+          <span class="tool-pill">Claude Pro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 14:50 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">14:50–15:40</div>
+          <span class="tag tag-demo mt-1">Hands-on</span>
+        </div>
+        <div class="col-span-8">
+          <div class="font-bold text-sm mb-1.5">Claude viết VBA & Code · Tự động hóa check lỗi HĐ</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Demo: nhờ Claude viết VBA macro check lỗi HĐ kế toán hàng loạt</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Cách brief Claude để code chạy đúng ngay lần đầu</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Sau khóa: team có macro mẫu để nhân rộng</li>
+          </ul>
+        </div>
+        <div class="col-span-2 text-right space-y-1">
+          <span class="tool-pill">Claude</span><br>
+          <span class="tool-pill">Excel VBA</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Break 2 -->
+    <div class="session-break rounded-xl px-5 py-2.5 text-sm text-green-800 font-medium">
+      ☕ 15:40 – 15:55 · Nghỉ giải lao
+    </div>
+
+    <!-- Row 15:55 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">15:55–16:20</div>
+          <span class="tag tag-demo mt-1">Hands-on</span>
+        </div>
+        <div class="col-span-8">
+          <div class="font-bold text-sm mb-1.5">Bài 4: Phân tích data ~1 triệu dòng · Team TCQT</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Power Query M-code do Claude viết để load & tổng hợp</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Claude phân tích trực tiếp data + sinh nhận xét, cảnh báo</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Gợi ý công cụ quản lý cho data lớn offline</li>
+          </ul>
+        </div>
+        <div class="col-span-2 text-right space-y-1">
+          <span class="tool-pill">Claude</span><br>
+          <span class="tool-pill">Power Query</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 16:20 -->
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-12 gap-3 px-5 py-4 items-start">
+        <div class="col-span-2">
+          <div class="text-xs font-mono text-ink/50">16:20–16:30</div>
+          <span class="tag tag-lecture mt-1">Tổng kết</span>
+        </div>
+        <div class="col-span-10">
+          <div class="font-bold text-sm mb-1.5">Tổng kết & Q&A</div>
+          <ul class="space-y-1 text-sm text-ink/70">
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Recap: tư duy chuẩn hóa → công cụ AI → tăng tốc thực tế</li>
+            <li class="flex gap-2"><span class="text-brand-400">›</span> Bộ template prompt & checklist bàn giao 04 nghiệp vụ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SECTION 4: KẾT QUẢ ĐẠT ĐƯỢC -->
+<section class="bg-brand-900 text-white px-6 py-14">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-2"><span class="text-xs font-bold uppercase tracking-widest text-brand-300">Cam kết đầu ra</span></div>
+    <h2 class="text-2xl font-black mb-8">6 Kết Quả Đạt Được Sau Khóa</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="outcome-card bg-white/10 rounded-xl p-5">
+        <div class="text-brand-300 font-black text-2xl mb-1">①</div>
+        <div class="font-bold text-base">Khung tư duy phân loại bài toán TC-KT</div>
+      </div>
+      <div class="outcome-card bg-white/10 rounded-xl p-5">
+        <div class="text-brand-300 font-black text-2xl mb-1">②</div>
+        <div class="font-bold text-base">Nguyên tắc chuẩn hóa rule & output trước khi gọi AI</div>
+      </div>
+      <div class="outcome-card bg-white/10 rounded-xl p-5">
+        <div class="text-brand-300 font-black text-2xl mb-1">③</div>
+        <div class="font-bold text-base">Claude thành thạo cho 04 nghiệp vụ cốt lõi + template prompt</div>
+      </div>
+      <div class="outcome-card bg-white/10 rounded-xl p-5">
+        <div class="text-brand-300 font-black text-2xl mb-1">④</div>
+        <div class="font-bold text-base">Bảng quyết định Claude / Gemini / Copilot 365</div>
+      </div>
+      <div class="outcome-card bg-white/10 rounded-xl p-5">
+        <div class="text-brand-300 font-black text-2xl mb-1">⑤</div>
+        <div class="font-bold text-base">VBA macro mẫu (do Claude viết) cho Check lỗi HĐ</div>
+      </div>
+      <div class="outcome-card bg-white/10 rounded-xl p-5">
+        <div class="text-brand-300 font-black text-2xl mb-1">⑥</div>
+        <div class="font-bold text-base">Workflow Claude + Power Query xử lý data ~1tr dòng</div>
+      </div>
+    </div>
+    <p class="text-brand-300 text-sm mt-6 italic">Phạm vi khóa 1 ngày: trang bị khung tư duy + kỹ năng cốt lõi. Demo thực hiện trên dữ liệu minh họa phản ánh đúng bối cảnh doanh nghiệp. Sau khi ký NDA, KH có thể gửi data thật cho phiên workshop nâng cao nếu cần.</p>
+  </div>
+</section>
+
+<!-- SECTION 5: HỌC PHÍ + CTA -->
+<section class="max-w-4xl mx-auto px-6 py-14">
+  <div class="grid sm:grid-cols-2 gap-8 items-center">
+    <div>
+      <div class="mb-2"><span class="text-xs font-bold uppercase tracking-widest text-brand-600">Học phí</span></div>
+      <h2 class="text-2xl font-black mb-4">Đào Tạo Doanh Nghiệp</h2>
+      <div class="bg-brand-50 border border-brand-200 rounded-2xl p-6 mb-4">
+        <div class="text-ink/50 text-sm mb-1">Đơn giá / buổi (3 tiếng)</div>
+        <div class="text-4xl font-black text-brand-700">8.000.000 <span class="text-xl font-bold">₫</span></div>
+        <div class="text-sm text-ink/60 mt-1">× 02 buổi (Sáng + Chiều)</div>
+        <div class="h-px bg-brand-200 my-4"></div>
+        <div class="flex justify-between items-center">
+          <span class="font-bold">Tổng thanh toán</span>
+          <span class="font-black text-xl text-brand-700">16.000.000 ₫</span>
+        </div>
+        <div class="text-xs text-ink/50 mt-1 text-right">KCT — Dịch vụ đào tạo không chịu thuế GTGT</div>
+      </div>
+      <div class="text-sm text-ink/70 space-y-1.5">
+        <div class="flex gap-2"><span class="text-green-500">✓</span> Đã bao gồm: tài liệu, template prompt, VBA macro mẫu, checklist 04 nghiệp vụ</div>
+        <div class="flex gap-2"><span class="text-ink/30">○</span> Chưa bao gồm: địa điểm, thiết bị, ăn uống (KH chuẩn bị)</div>
+        <div class="flex gap-2"><span class="text-green-500">✓</span> Thanh toán trong vòng 07 ngày sau khi kết thúc khóa</div>
+      </div>
+    </div>
+    <div class="bg-gradient-to-br from-brand-700 to-blue-600 text-white rounded-2xl p-8">
+      <div class="text-white/70 text-sm mb-1">Giảng viên phụ trách</div>
+      <div class="font-black text-2xl mb-1">Ms. Giang</div>
+      <div class="text-brand-200 text-sm mb-6">Giám đốc AZCEL Group · Xcel</div>
+      <div class="space-y-3 mb-7">
+        <a href="mailto:giang@xcel.vn" class="flex items-center gap-3 bg-white/15 hover:bg-white/25 transition-colors rounded-xl px-4 py-3">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span class="text-sm font-medium">giang@xcel.vn</span>
+        </a>
+        <a href="tel:0983999886" class="flex items-center gap-3 bg-white/15 hover:bg-white/25 transition-colors rounded-xl px-4 py-3">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <span class="text-sm font-medium">0983 999 886</span>
+        </a>
+      </div>
+      <a href="mailto:giang@xcel.vn?subject=Đăng ký khóa AI TC-KT&body=Xin chào Ms. Giang, tôi muốn đăng ký khóa đào tạo AI Ứng dụng trong Tài Chính – Kế Toán." class="block text-center bg-white text-brand-700 font-bold py-3 rounded-xl hover:bg-brand-50 transition-colors">
+        Liên hệ đăng ký ngay →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="gradient-bar text-white px-6 py-6">
+  <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <svg viewBox="0 0 32 32" fill="none" class="w-6 h-6"><path d="M5 5 L16 16 L27 5 M5 27 L16 16 L27 27" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="font-bold">Xcel · AZCEL Group</span>
+    </div>
+    <span class="text-white/60 text-sm">hub.xcel.vn · giang@xcel.vn · 0983 999 886</span>
+    <span class="text-white/50 text-xs">© 2026 AZCEL Group</span>
+  </div>
+</footer>
+
+</body>
+</html>
