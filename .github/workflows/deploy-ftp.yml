@@ -1,0 +1,41 @@
+name: Deploy to FTP (hub.xcel.vn)
+
+# Triển khai site tĩnh lên FTP server mỗi khi push vào master,
+# hoặc chạy thủ công qua nút "Run workflow".
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+          # Web root của user 'xcel' chính là thư mục đăng nhập
+          server-dir: ./
+          # Chỉ đẩy nội dung web, loại trừ file repo/CI
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/node_modules/**
+            **/*.md
+            **/deploy.py
+            **/import_quiz_api.py
+            **/.env
+            **/*.xlsx
