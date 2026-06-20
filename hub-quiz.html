@@ -4,229 +4,239 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trắc Nghiệm Data Analytics — hub.xcel.vn</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --accent: #7c3aed;
-    --bg: #f0f4ff;
-    --card: #ffffff;
-    --text: #1e293b;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --success: #16a34a;
-    --danger: #dc2626;
+    --primary: #2563eb; --primary-dark: #1d4ed8; --accent: #7c3aed;
+    --bg: #f0f4ff; --card: #ffffff; --text: #1e293b; --muted: #64748b; --border: #e2e8f0;
+    --success: #16a34a; --danger: #dc2626;
     --badge-b: #dcfce7; --badge-b-text: #166534;
     --badge-j: #dbeafe; --badge-j-text: #1e40af;
     --badge-m: #fff7ed; --badge-m-text: #9a3412;
     --badge-s: #fce7f3; --badge-s-text: #831843;
   }
-
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.6;
-  }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
 
   header {
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    color: white;
-    padding: 24px 20px;
-    text-align: center;
+    color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100;
   }
-  header .logo { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; opacity: .75; margin-bottom: 6px; }
-  header h1 { font-size: clamp(20px, 4vw, 28px); font-weight: 700; }
-  header p { font-size: 14px; opacity: .85; margin-top: 4px; }
-
-  .container { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
-
-  /* --- Intro screen --- */
-  #intro-screen { text-align: center; }
-  .intro-card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 40px 32px;
-    box-shadow: 0 4px 24px rgba(37,99,235,.08);
-    margin-top: 8px;
+  .header-top { display: flex; align-items: center; justify-content: space-between; max-width: 760px; margin: 0 auto; }
+  .logo { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: .75; }
+  header h1 { font-size: clamp(16px, 3.5vw, 22px); font-weight: 700; margin-top: 4px; }
+  header p { font-size: 13px; opacity: .85; margin-top: 2px; }
+  .btn-history {
+    background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4);
+    color: white; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: background .2s;
   }
+  .btn-history:hover { background: rgba(255,255,255,.35); }
+  .user-chip {
+    background: rgba(255,255,255,.15); border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; color: rgba(255,255,255,.9); display: none;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 24px 16px 56px; }
+
+  /* ─── PROFILE SCREEN ─── */
+  #profile-screen { text-align: center; }
+  .profile-card { background: var(--card); border-radius: 20px; padding: 40px 32px; box-shadow: 0 4px 24px rgba(37,99,235,.08); margin-top: 8px; }
+  .profile-card h2 { font-size: 22px; color: var(--primary); margin-bottom: 8px; }
+  .profile-card p { color: var(--muted); margin-bottom: 28px; font-size: 15px; }
+  .form-group { text-align: left; margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .form-group input {
+    width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 10px;
+    font-size: 15px; color: var(--text); outline: none; transition: border .2s;
+    font-family: inherit;
+  }
+  .form-group input:focus { border-color: var(--primary); }
+  .form-note { font-size: 12px; color: var(--muted); margin-top: 16px; margin-bottom: 24px; line-height: 1.5; }
+
+  /* ─── INTRO SCREEN ─── */
+  #intro-screen { text-align: center; display: none; }
+  .intro-card { background: var(--card); border-radius: 16px; padding: 40px 32px; box-shadow: 0 4px 24px rgba(37,99,235,.08); margin-top: 8px; }
   .intro-card h2 { font-size: 22px; color: var(--primary); margin-bottom: 12px; }
   .intro-card p { color: var(--muted); margin-bottom: 8px; font-size: 15px; }
   .stat-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 24px 0; }
-  .stat { background: var(--bg); border-radius: 12px; padding: 16px 24px; text-align: center; min-width: 100px; }
+  .stat { background: var(--bg); border-radius: 12px; padding: 16px 24px; text-align: center; min-width: 90px; }
   .stat-num { font-size: 28px; font-weight: 700; color: var(--primary); }
   .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .level-legend { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
+
+  /* ─── QUIZ SCREEN ─── */
+  #quiz-screen { display: none; }
+  .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 6px; margin-bottom: 6px; }
+  .progress-bar-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); height: 6px; border-radius: 99px; transition: width .4s; }
+  .progress-text { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .question-card { background: var(--card); border-radius: 16px; padding: 28px; box-shadow: 0 2px 16px rgba(0,0,0,.06); margin-bottom: 16px; border: 1px solid var(--border); transition: border-color .2s; }
+  .question-card.answered-correct { border-color: var(--success); background: #f0fdf4; }
+  .question-card.answered-wrong { border-color: var(--danger); background: #fff5f5; }
+  .q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .q-num { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .badge-topic { background: #f1f5f9; color: var(--muted); padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .q-text { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 16px; line-height: 1.5; }
+  .options { display: grid; gap: 10px; }
+  .option-btn { display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 10px; padding: 12px 16px; cursor: pointer; text-align: left; font-size: 14px; color: var(--text); transition: all .15s; }
+  .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #eff6ff; }
+  .option-btn.selected { border-color: var(--primary); background: #eff6ff; }
+  .option-btn.correct { border-color: var(--success) !important; background: #dcfce7 !important; color: var(--success) !important; }
+  .option-btn.wrong { border-color: var(--danger) !important; background: #fee2e2 !important; color: var(--danger) !important; }
+  .option-btn:disabled { cursor: default; }
+  .opt-label { width: 28px; height: 28px; border-radius: 50%; background: white; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .feedback { margin-top: 12px; font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 8px; }
+  .feedback.correct { background: #dcfce7; color: var(--success); }
+  .feedback.wrong { background: #fee2e2; color: var(--danger); }
+  .quiz-actions { text-align: center; margin-top: 32px; }
+
+  /* ─── RESULT SCREEN ─── */
+  #result-screen { display: none; }
+  .result-card { background: var(--card); border-radius: 20px; padding: 40px 32px; box-shadow: 0 4px 24px rgba(0,0,0,.08); text-align: center; }
+  .result-score-ring { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 24px; background: conic-gradient(var(--primary) 0deg, var(--accent) var(--deg, 180deg), var(--border) var(--deg, 180deg)); display: flex; align-items: center; justify-content: center; }
+  .result-score-inner { width: 110px; height: 110px; border-radius: 50%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .score-num { font-size: 32px; font-weight: 800; color: var(--primary); }
+  .score-total { font-size: 13px; color: var(--muted); }
+  .result-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .result-msg { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
+  .result-breakdown { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+  .breakdown-item { background: var(--bg); border-radius: 12px; padding: 16px; }
+  .breakdown-num { font-size: 24px; font-weight: 700; }
+  .breakdown-label { font-size: 12px; color: var(--muted); }
+  .breakdown-item.correct .breakdown-num { color: var(--success); }
+  .breakdown-item.wrong .breakdown-num { color: var(--danger); }
+  .de-tag { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .email-status { font-size: 13px; padding: 8px 16px; border-radius: 8px; margin-bottom: 16px; display: none; }
+  .email-status.sending { background: #eff6ff; color: var(--primary); }
+  .email-status.sent { background: #dcfce7; color: var(--success); }
+  .email-status.fallback { background: #fff7ed; color: #92400e; }
+
+  /* Wrong review section */
+  .wrong-review { margin-top: 28px; text-align: left; }
+  .wrong-review h3 { font-size: 15px; font-weight: 700; color: var(--danger); margin-bottom: 12px; border-bottom: 2px solid #fee2e2; padding-bottom: 8px; }
+  .wrong-item { background: #fff5f5; border: 1px solid #fecaca; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+  .wrong-item .q-num-small { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+  .wrong-item .q-text-small { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .wrong-answers { display: flex; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+  .your-ans { background: #fee2e2; color: var(--danger); padding: 2px 10px; border-radius: 6px; font-weight: 600; }
+  .correct-ans { background: #dcfce7; color: var(--success); padding: 2px 10px; border-radius: 6px; font-weight: 600; }
+
+  /* ─── HISTORY SCREEN ─── */
+  #history-screen { display: none; }
+  .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .history-header h2 { font-size: 20px; font-weight: 700; }
+  .history-empty { text-align: center; padding: 60px 0; color: var(--muted); }
+  .history-item { background: var(--card); border-radius: 14px; padding: 20px; margin-bottom: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.05); border: 1px solid var(--border); }
+  .history-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .history-date { font-size: 12px; color: var(--muted); }
+  .history-score-badge { font-size: 16px; font-weight: 800; }
+  .score-great { color: var(--success); }
+  .score-good { color: var(--primary); }
+  .score-ok { color: #d97706; }
+  .score-low { color: var(--danger); }
+  .history-de { font-size: 13px; font-weight: 600; color: var(--accent); }
+  .history-wrong-list { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.6; }
+  .history-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ─── BADGES ─── */
   .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
   .badge-B { background: var(--badge-b); color: var(--badge-b-text); }
   .badge-J { background: var(--badge-j); color: var(--badge-j-text); }
   .badge-M { background: var(--badge-m); color: var(--badge-m-text); }
   .badge-S { background: var(--badge-s); color: var(--badge-s-text); }
 
-  .btn-start {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white; border: none; border-radius: 12px;
-    padding: 14px 40px; font-size: 16px; font-weight: 600;
-    cursor: pointer; transition: all .2s; box-shadow: 0 4px 15px rgba(37,99,235,.3);
-  }
-  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,.4); }
-
-  /* --- Quiz screen --- */
-  #quiz-screen { display: none; }
-
-  .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 6px; margin-bottom: 6px; }
-  .progress-bar-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); height: 6px; border-radius: 99px; transition: width .4s; }
-  .progress-text { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-
-  .question-card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 28px;
-    box-shadow: 0 2px 16px rgba(0,0,0,.06);
-    margin-bottom: 16px;
-    border: 1px solid var(--border);
-    transition: box-shadow .2s;
-  }
-  .question-card.answered-correct { border-color: var(--success); background: #f0fdf4; }
-  .question-card.answered-wrong { border-color: var(--danger); background: #fff5f5; }
-
-  .q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-  .q-num { font-size: 12px; color: var(--muted); font-weight: 600; }
-  .badge-topic { background: #f1f5f9; color: var(--muted); padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-
-  .q-text { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 16px; line-height: 1.5; }
-
-  .options { display: grid; gap: 10px; }
-  .option-btn {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--bg); border: 2px solid var(--border);
-    border-radius: 10px; padding: 12px 16px;
-    cursor: pointer; text-align: left; font-size: 14px; color: var(--text);
-    transition: all .15s;
-  }
-  .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #eff6ff; }
-  .option-btn.selected { border-color: var(--primary); background: #eff6ff; }
-  .option-btn.correct { border-color: var(--success) !important; background: #dcfce7 !important; color: var(--success) !important; }
-  .option-btn.wrong { border-color: var(--danger) !important; background: #fee2e2 !important; color: var(--danger) !important; }
-  .option-btn:disabled { cursor: default; }
-
-  .opt-label {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: white; border: 2px solid currentColor;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 13px; flex-shrink: 0;
-  }
-
-  .feedback { margin-top: 12px; font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 8px; }
-  .feedback.correct { background: #dcfce7; color: var(--success); }
-  .feedback.wrong { background: #fee2e2; color: var(--danger); }
-
-  .quiz-actions { text-align: center; margin-top: 32px; }
-  .btn-submit {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white; border: none; border-radius: 12px;
-    padding: 14px 48px; font-size: 16px; font-weight: 600;
-    cursor: pointer; transition: all .2s; box-shadow: 0 4px 15px rgba(37,99,235,.3);
-  }
-  .btn-submit:hover { transform: translateY(-2px); }
-  .btn-submit:disabled { opacity: .5; cursor: default; transform: none; }
-
-  /* --- Result screen --- */
-  #result-screen { display: none; text-align: center; }
-  .result-card {
-    background: var(--card); border-radius: 20px; padding: 40px 32px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.08);
-  }
-  .result-score-ring {
-    width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 24px;
-    background: conic-gradient(var(--primary) 0deg, var(--accent) var(--deg, 180deg), var(--border) var(--deg, 180deg));
-    display: flex; align-items: center; justify-content: center; position: relative;
-  }
-  .result-score-inner {
-    width: 110px; height: 110px; border-radius: 50%; background: white;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-  }
-  .score-num { font-size: 32px; font-weight: 800; color: var(--primary); }
-  .score-total { font-size: 13px; color: var(--muted); }
-  .result-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-  .result-msg { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
-
-  .result-breakdown { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
-  .breakdown-item { background: var(--bg); border-radius: 12px; padding: 16px; }
-  .breakdown-num { font-size: 24px; font-weight: 700; }
-  .breakdown-label { font-size: 12px; color: var(--muted); }
-  .breakdown-item.correct .breakdown-num { color: var(--success); }
-  .breakdown-item.wrong .breakdown-num { color: var(--danger); }
-
-  .btn-retry {
-    background: transparent; color: var(--primary);
-    border: 2px solid var(--primary); border-radius: 12px;
-    padding: 12px 32px; font-size: 15px; font-weight: 600;
-    cursor: pointer; transition: all .2s; margin-right: 12px;
-  }
-  .btn-retry:hover { background: var(--primary); color: white; }
-
-  .de-tag { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
-
-  /* Loading dots */
-  .loading { text-align: center; padding: 60px 0; color: var(--muted); }
+  /* ─── BUTTONS ─── */
+  .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 12px; padding: 14px 40px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all .2s; box-shadow: 0 4px 15px rgba(37,99,235,.3); font-family: inherit; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,.4); }
+  .btn-primary:disabled { opacity: .5; cursor: default; transform: none; }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); border-radius: 10px; padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; font-family: inherit; }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; font-family: inherit; }
+  .btn-sm-outline { padding: 7px 14px; font-size: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: white; color: var(--text); transition: all .15s; font-family: inherit; }
+  .btn-sm-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-email { background: #ecfdf5; color: var(--success); border: 1.5px solid #bbf7d0; }
+  .btn-email:hover { background: var(--success); color: white; }
+  .btn-danger-sm { background: #fee2e2; color: var(--danger); border: 1.5px solid #fecaca; }
+  .btn-danger-sm:hover { background: var(--danger); color: white; }
 
   @media (max-width: 500px) {
     .result-breakdown { grid-template-columns: 1fr; }
-    .intro-card { padding: 28px 20px; }
+    .profile-card, .intro-card, .result-card { padding: 24px 16px; }
     .question-card { padding: 20px; }
+    .btn-primary { padding: 12px 28px; font-size: 15px; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">hub.xcel.vn</div>
-  <h1>📊 Trắc Nghiệm Data Analytics</h1>
-  <p>Kiểm tra kỹ năng phân tích dữ liệu & nghiệp vụ Excel</p>
+  <div class="header-top">
+    <div class="user-chip" id="user-chip"></div>
+    <div>
+      <div class="logo">hub.xcel.vn</div>
+      <h1>📊 Trắc Nghiệm Data Analytics</h1>
+    </div>
+    <button class="btn-history" onclick="showHistory()">📋 Lịch sử</button>
+  </div>
 </header>
 
 <div class="container">
 
-  <!-- INTRO SCREEN -->
+  <!-- ══ SCREEN 0: PROFILE ══ -->
+  <div id="profile-screen">
+    <div class="profile-card">
+      <h2>Xin chào! 👋</h2>
+      <p>Nhập thông tin để lưu kết quả và nhận báo cáo tự động sau mỗi bài test.</p>
+      <div class="form-group">
+        <label>Họ và tên *</label>
+        <input type="text" id="input-name" placeholder="Nguyễn Văn A" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" id="input-email" placeholder="email@congty.com" autocomplete="email">
+      </div>
+      <p class="form-note">📧 Sau khi làm bài, kết quả sẽ được gửi tự động về email của bạn và quản lý.</p>
+      <button class="btn-primary" onclick="saveProfile()">Tiếp tục →</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 1: INTRO ══ -->
   <div id="intro-screen">
     <div class="intro-card">
       <h2>Bài Test Buffet — Back Office PTG</h2>
       <p>Bộ câu hỏi trắc nghiệm đánh giá kỹ năng Excel và phân tích dữ liệu theo từng cấp độ.</p>
       <p>Mỗi lần làm sẽ ngẫu nhiên chọn 1 trong 3 đề (đề xuất hiện ở cuối).</p>
-
       <div class="stat-row">
         <div class="stat"><div class="stat-num">21</div><div class="stat-label">Câu hỏi</div></div>
         <div class="stat"><div class="stat-num">4</div><div class="stat-label">Cấp độ</div></div>
         <div class="stat"><div class="stat-num">~20</div><div class="stat-label">Phút</div></div>
         <div class="stat"><div class="stat-num">3</div><div class="stat-label">Đề khác nhau</div></div>
       </div>
-
       <div class="level-legend">
         <span class="badge badge-B">B — Basic</span>
         <span class="badge badge-J">J — Junior</span>
         <span class="badge badge-M">M — Mid</span>
         <span class="badge badge-S">S — Senior</span>
       </div>
-
-      <button class="btn-start" onclick="startQuiz()">🚀 Bắt đầu làm bài</button>
+      <button class="btn-primary" onclick="startQuiz()">🚀 Bắt đầu làm bài</button>
+      <br><br>
+      <button class="btn-sm-outline" onclick="showHistory()">📋 Xem lịch sử của tôi</button>
+      &nbsp;
+      <button class="btn-sm-outline" onclick="changeProfile()">✏️ Đổi thông tin</button>
     </div>
   </div>
 
-  <!-- QUIZ SCREEN -->
+  <!-- ══ SCREEN 2: QUIZ ══ -->
   <div id="quiz-screen">
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
     <div class="progress-text" id="progress-text"></div>
     <div id="questions-container"></div>
     <div class="quiz-actions">
-      <button class="btn-submit" id="submit-btn" onclick="submitQuiz()" disabled>Nộp bài & Xem điểm</button>
+      <button class="btn-primary" id="submit-btn" onclick="submitQuiz()" disabled>Nộp bài & Xem điểm</button>
     </div>
   </div>
 
-  <!-- RESULT SCREEN -->
+  <!-- ══ SCREEN 3: RESULT ══ -->
   <div id="result-screen">
     <div class="result-card">
       <div class="de-tag" id="result-de-tag"></div>
@@ -239,191 +249,390 @@
       <div class="result-title" id="result-title"></div>
       <div class="result-msg" id="result-msg"></div>
       <div class="result-breakdown">
-        <div class="breakdown-item correct">
-          <div class="breakdown-num" id="count-correct">0</div>
-          <div class="breakdown-label">✅ Câu đúng</div>
-        </div>
-        <div class="breakdown-item wrong">
-          <div class="breakdown-num" id="count-wrong">0</div>
-          <div class="breakdown-label">❌ Câu sai / bỏ</div>
-        </div>
+        <div class="breakdown-item correct"><div class="breakdown-num" id="count-correct">0</div><div class="breakdown-label">✅ Câu đúng</div></div>
+        <div class="breakdown-item wrong"><div class="breakdown-num" id="count-wrong">0</div><div class="breakdown-label">❌ Câu sai / bỏ</div></div>
       </div>
-      <button class="btn-retry" onclick="retryQuiz()">🔄 Làm lại (đề khác)</button>
-      <button class="btn-start" onclick="retryQuiz()">📊 Tiếp tục luyện tập</button>
+      <div class="email-status" id="email-status"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
+        <button class="btn-outline" onclick="retryQuiz()">🔄 Làm lại (đề khác)</button>
+        <button class="btn-sm btn-email" id="btn-send-email" onclick="manualSendEmail()">📧 Gửi kết quả qua email</button>
+      </div>
+      <!-- Wrong answer review -->
+      <div class="wrong-review" id="wrong-review"></div>
     </div>
+  </div>
+
+  <!-- ══ SCREEN 4: HISTORY ══ -->
+  <div id="history-screen">
+    <div class="history-header">
+      <h2>📋 Lịch sử bài test</h2>
+      <button class="btn-outline" onclick="backToIntro()">← Làm bài mới</button>
+    </div>
+    <div id="history-user-info" style="background:var(--card);border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.05)"></div>
+    <div id="history-list"></div>
   </div>
 
 </div>
 
 <script>
+// ══════════════════════════════════════════
+// CONFIG — Điền vào sau khi tạo tài khoản EmailJS.com (miễn phí, 200 email/tháng)
+// ══════════════════════════════════════════
+const EMAIL_CFG = {
+  publicKey:   '',   // VD: 'abc123XYZ'
+  serviceId:   '',   // VD: 'service_gmail'
+  templateId:  '',   // VD: 'template_quiz_result'
+  toEmail:     'giang@xcel.vn'
+};
+
+// ══════════════════════════════════════════
+// QUIZ DATA
+// ══════════════════════════════════════════
 const QUIZ_DATA = {"de_1": [{"id": 1, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Có tổng cộng bao nhiêu đơn hàng trong sheet 01_SALES?", "options": {"A": "50", "B": "52", "C": "49", "D": "48"}, "dap_an": "A"}, {"id": 2, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Tổng doanh thu (Thành tiền) toàn bộ đơn hàng?", "options": {"A": "33.575.000", "B": "35.775.000", "C": "34.775.000", "D": "34.575.000"}, "dap_an": "C"}, {"id": 3, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Doanh thu trung bình mỗi đơn hàng?", "options": {"A": "695.500", "B": "655.500", "C": "700.000", "D": "725.500"}, "dap_an": "A"}, {"id": 4, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Đơn hàng có giá trị CAO NHẤT?", "options": {"A": "3.408.000", "B": "2.880.000", "C": "3.552.000", "D": "3.360.000"}, "dap_an": "A"}, {"id": 5, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Số SKU khác nhau trong 03_TONKHO?", "options": {"A": "11", "B": "13", "C": "10", "D": "12"}, "dap_an": "D"}, {"id": 6, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Tổng số tiền nợ của TẤT CẢ khách hàng?", "options": {"A": "483.000.000", "B": "503.000.000", "C": "493.000.000", "D": "453.000.000"}, "dap_an": "C"}, {"id": 7, "cap": "J", "chu_de": "SALE", "cau_hoi": "Tổng doanh thu của NV \"Nguyễn Văn A\"?", "options": {"A": "5.337.000", "B": "4.373.000", "C": "5.373.000", "D": "6.373.000"}, "dap_an": "C"}, {"id": 8, "cap": "J", "chu_de": "SALE", "cau_hoi": "Đơn giá sản phẩm \"SP05\"?", "options": {"A": "28.000", "B": "8.000", "C": "9.500", "D": "14.000"}, "dap_an": "C"}, {"id": 9, "cap": "J", "chu_de": "SALE", "cau_hoi": "Đếm số đơn có Thành tiền > 1.000.000?", "options": {"A": "10", "B": "11", "C": "12", "D": "14"}, "dap_an": "C"}, {"id": 10, "cap": "J", "chu_de": "KT", "cau_hoi": "Tổng nợ các KH vùng \"Hà Nội\"?", "options": {"A": "135.000.000", "B": "152.000.000", "C": "99.000.000", "D": "125.000.000"}, "dap_an": "A"}, {"id": 11, "cap": "J", "chu_de": "KT", "cau_hoi": "Số khách hàng vùng \"Hải Phòng\"?", "options": {"A": "4", "B": "5", "C": "3", "D": "2"}, "dap_an": "C"}, {"id": 12, "cap": "J", "chu_de": "KT", "cau_hoi": "VLOOKUP \"KH999\" (không tồn tại) với IFERROR trả về?", "options": {"A": "Không có", "B": "Lỗi", "C": "", "D": "0"}, "dap_an": "A"}, {"id": 13, "cap": "J", "chu_de": "KHO", "cau_hoi": "Tổng tồn cuối kỳ nhóm \"Sữa\"?", "options": {"A": "1.763", "B": "1.514", "C": "1.414", "D": "1.265"}, "dap_an": "B"}, {"id": 14, "cap": "J", "chu_de": "KHO", "cau_hoi": "Tồn SP05 (Coca cola) chiếm % tổng tồn kho?", "options": {"A": "7%", "B": "5%", "C": "10%", "D": "14%"}, "dap_an": "A"}, {"id": 15, "cap": "M", "chu_de": "KT", "cau_hoi": "Số ngày quá hạn của KH001 đến 01/05/2026?", "options": {"A": "51", "B": "11", "C": "30", "D": "21"}, "dap_an": "D"}, {"id": 16, "cap": "M", "chu_de": "KT", "cau_hoi": "Bucket aging của KH001 (so 01/05/2026)?", "options": {"A": "61-90", "B": ">90", "C": "31-60", "D": "0-30"}, "dap_an": "D"}, {"id": 17, "cap": "M", "chu_de": "KHO", "cau_hoi": "SKU có tồn cuối kỳ CAO NHẤT là sản phẩm nào?", "options": {"A": "Bánh quy Cosy", "B": "Sữa chua TH 100g", "C": "Coca cola 330ml", "D": "Kẹo Mentos cuộn"}, "dap_an": "A"}, {"id": 18, "cap": "M", "chu_de": "KHO", "cau_hoi": "Tồn cuối kỳ TRUNG BÌNH nhóm \"Bia rượu\"?", "options": {"A": "70", "B": "149", "C": "79", "D": "74,5"}, "dap_an": "D"}, {"id": 19, "cap": "M", "chu_de": "SALE", "cau_hoi": "DT vùng \"Hà Nội\" từ 01/04 đến 15/04/2026?", "options": {"A": "3.234.500", "B": "4.324.500", "C": "5.434.500", "D": "4.234.500"}, "dap_an": "D"}, {"id": 20, "cap": "S", "chu_de": "KT", "cau_hoi": "Vùng có TỔNG NỢ cao nhất (nguy hiểm nhất)?", "options": {"A": "Hà Nội", "B": "Nam Định", "C": "Hải Phòng", "D": "Bắc Giang"}, "dap_an": "C"}, {"id": 21, "cap": "S", "chu_de": "KHO", "cau_hoi": "SKU slow-mover có Stock Day CAO NHẤT?", "options": {"A": "SP07 Bánh quy Cosy", "B": "SP02 Sữa chua TH", "C": "SP05 Coca cola", "D": "SP01 Sữa tươi"}, "dap_an": "A"}], "de_2": [{"id": 1, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Có tổng cộng bao nhiêu đơn hàng trong sheet 01_SALES?", "options": {"A": "50", "B": "48", "C": "49", "D": "52"}, "dap_an": "A"}, {"id": 2, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Tổng doanh thu (Thành tiền) toàn bộ đơn hàng?", "options": {"A": "33.575.000", "B": "35.775.000", "C": "34.775.000", "D": "34.575.000"}, "dap_an": "C"}, {"id": 3, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Doanh thu trung bình mỗi đơn hàng?", "options": {"A": "655.500", "B": "725.500", "C": "695.500", "D": "700.000"}, "dap_an": "C"}, {"id": 4, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Đơn hàng có giá trị CAO NHẤT?", "options": {"A": "2.880.000", "B": "3.408.000", "C": "3.360.000", "D": "3.552.000"}, "dap_an": "B"}, {"id": 5, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Số SKU khác nhau trong 03_TONKHO?", "options": {"A": "10", "B": "13", "C": "12", "D": "11"}, "dap_an": "C"}, {"id": 6, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Tổng số tiền nợ của TẤT CẢ khách hàng?", "options": {"A": "453.000.000", "B": "493.000.000", "C": "483.000.000", "D": "503.000.000"}, "dap_an": "B"}, {"id": 7, "cap": "J", "chu_de": "SALE", "cau_hoi": "Tổng doanh thu của NV \"Nguyễn Văn A\"?", "options": {"A": "5.373.000", "B": "6.373.000", "C": "4.373.000", "D": "5.337.000"}, "dap_an": "A"}, {"id": 8, "cap": "J", "chu_de": "SALE", "cau_hoi": "Đơn giá sản phẩm \"SP05\"?", "options": {"A": "9.500", "B": "14.000", "C": "28.000", "D": "8.000"}, "dap_an": "A"}, {"id": 9, "cap": "J", "chu_de": "SALE", "cau_hoi": "Đếm số đơn có Thành tiền > 1.000.000?", "options": {"A": "10", "B": "14", "C": "11", "D": "12"}, "dap_an": "D"}, {"id": 10, "cap": "J", "chu_de": "KT", "cau_hoi": "Tổng nợ các KH vùng \"Hà Nội\"?", "options": {"A": "135.000.000", "B": "125.000.000", "C": "99.000.000", "D": "152.000.000"}, "dap_an": "A"}, {"id": 11, "cap": "J", "chu_de": "KT", "cau_hoi": "Số khách hàng vùng \"Hải Phòng\"?", "options": {"A": "4", "B": "3", "C": "2", "D": "5"}, "dap_an": "B"}, {"id": 12, "cap": "J", "chu_de": "KT", "cau_hoi": "VLOOKUP \"KH999\" (không tồn tại) với IFERROR trả về?", "options": {"A": "Lỗi", "B": "Không có", "C": "0", "D": ""}, "dap_an": "B"}, {"id": 13, "cap": "J", "chu_de": "KHO", "cau_hoi": "Tổng tồn cuối kỳ nhóm \"Sữa\"?", "options": {"A": "1.414", "B": "1.763", "C": "1.265", "D": "1.514"}, "dap_an": "D"}, {"id": 14, "cap": "J", "chu_de": "KHO", "cau_hoi": "Tồn SP05 (Coca cola) chiếm % tổng tồn kho?", "options": {"A": "5%", "B": "10%", "C": "14%", "D": "7%"}, "dap_an": "D"}, {"id": 15, "cap": "M", "chu_de": "KT", "cau_hoi": "Số ngày quá hạn của KH001 đến 01/05/2026?", "options": {"A": "51", "B": "11", "C": "21", "D": "30"}, "dap_an": "C"}, {"id": 16, "cap": "M", "chu_de": "KT", "cau_hoi": "Bucket aging của KH001 (so 01/05/2026)?", "options": {"A": ">90", "B": "61-90", "C": "0-30", "D": "31-60"}, "dap_an": "C"}, {"id": 17, "cap": "M", "chu_de": "KHO", "cau_hoi": "SKU có tồn cuối kỳ CAO NHẤT là sản phẩm nào?", "options": {"A": "Kẹo Mentos cuộn", "B": "Sữa chua TH 100g", "C": "Bánh quy Cosy", "D": "Coca cola 330ml"}, "dap_an": "C"}, {"id": 18, "cap": "M", "chu_de": "KHO", "cau_hoi": "Tồn cuối kỳ TRUNG BÌNH nhóm \"Bia rượu\"?", "options": {"A": "149", "B": "79", "C": "74,5", "D": "70"}, "dap_an": "C"}, {"id": 19, "cap": "M", "chu_de": "SALE", "cau_hoi": "DT vùng \"Hà Nội\" từ 01/04 đến 15/04/2026?", "options": {"A": "4.234.500", "B": "4.324.500", "C": "5.434.500", "D": "3.234.500"}, "dap_an": "A"}, {"id": 20, "cap": "S", "chu_de": "KT", "cau_hoi": "Vùng có TỔNG NỢ cao nhất (nguy hiểm nhất)?", "options": {"A": "Bắc Giang", "B": "Hải Phòng", "C": "Nam Định", "D": "Hà Nội"}, "dap_an": "B"}, {"id": 21, "cap": "S", "chu_de": "KHO", "cau_hoi": "SKU slow-mover có Stock Day CAO NHẤT?", "options": {"A": "SP07 Bánh quy Cosy", "B": "SP05 Coca cola", "C": "SP01 Sữa tươi", "D": "SP02 Sữa chua TH"}, "dap_an": "A"}], "de_3": [{"id": 1, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Có tổng cộng bao nhiêu đơn hàng trong sheet 01_SALES?", "options": {"A": "48", "B": "49", "C": "52", "D": "50"}, "dap_an": "D"}, {"id": 2, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Tổng doanh thu (Thành tiền) toàn bộ đơn hàng?", "options": {"A": "34.575.000", "B": "33.575.000", "C": "35.775.000", "D": "34.775.000"}, "dap_an": "D"}, {"id": 3, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Doanh thu trung bình mỗi đơn hàng?", "options": {"A": "655.500", "B": "725.500", "C": "695.500", "D": "700.000"}, "dap_an": "C"}, {"id": 4, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Đơn hàng có giá trị CAO NHẤT?", "options": {"A": "3.360.000", "B": "3.408.000", "C": "2.880.000", "D": "3.552.000"}, "dap_an": "B"}, {"id": 5, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Số SKU khác nhau trong 03_TONKHO?", "options": {"A": "10", "B": "12", "C": "13", "D": "11"}, "dap_an": "B"}, {"id": 6, "cap": "B", "chu_de": "CHUNG", "cau_hoi": "Tổng số tiền nợ của TẤT CẢ khách hàng?", "options": {"A": "503.000.000", "B": "453.000.000", "C": "483.000.000", "D": "493.000.000"}, "dap_an": "D"}, {"id": 7, "cap": "J", "chu_de": "SALE", "cau_hoi": "Tổng doanh thu của NV \"Nguyễn Văn A\"?", "options": {"A": "5.373.000", "B": "6.373.000", "C": "5.337.000", "D": "4.373.000"}, "dap_an": "A"}, {"id": 8, "cap": "J", "chu_de": "SALE", "cau_hoi": "Đơn giá sản phẩm \"SP05\"?", "options": {"A": "28.000", "B": "8.000", "C": "14.000", "D": "9.500"}, "dap_an": "D"}, {"id": 9, "cap": "J", "chu_de": "SALE", "cau_hoi": "Đếm số đơn có Thành tiền > 1.000.000?", "options": {"A": "10", "B": "12", "C": "14", "D": "11"}, "dap_an": "B"}, {"id": 10, "cap": "J", "chu_de": "KT", "cau_hoi": "Tổng nợ các KH vùng \"Hà Nội\"?", "options": {"A": "152.000.000", "B": "125.000.000", "C": "135.000.000", "D": "99.000.000"}, "dap_an": "C"}, {"id": 11, "cap": "J", "chu_de": "KT", "cau_hoi": "Số khách hàng vùng \"Hải Phòng\"?", "options": {"A": "5", "B": "4", "C": "3", "D": "2"}, "dap_an": "C"}, {"id": 12, "cap": "J", "chu_de": "KT", "cau_hoi": "VLOOKUP \"KH999\" (không tồn tại) với IFERROR trả về?", "options": {"A": "", "B": "Lỗi", "C": "Không có", "D": "0"}, "dap_an": "C"}, {"id": 13, "cap": "J", "chu_de": "KHO", "cau_hoi": "Tổng tồn cuối kỳ nhóm \"Sữa\"?", "options": {"A": "1.265", "B": "1.514", "C": "1.414", "D": "1.763"}, "dap_an": "B"}, {"id": 14, "cap": "J", "chu_de": "KHO", "cau_hoi": "Tồn SP05 (Coca cola) chiếm % tổng tồn kho?", "options": {"A": "14%", "B": "10%", "C": "5%", "D": "7%"}, "dap_an": "D"}, {"id": 15, "cap": "M", "chu_de": "KT", "cau_hoi": "Số ngày quá hạn của KH001 đến 01/05/2026?", "options": {"A": "21", "B": "11", "C": "51", "D": "30"}, "dap_an": "A"}, {"id": 16, "cap": "M", "chu_de": "KT", "cau_hoi": "Bucket aging của KH001 (so 01/05/2026)?", "options": {"A": ">90", "B": "31-60", "C": "61-90", "D": "0-30"}, "dap_an": "D"}, {"id": 17, "cap": "M", "chu_de": "KHO", "cau_hoi": "SKU có tồn cuối kỳ CAO NHẤT là sản phẩm nào?", "options": {"A": "Kẹo Mentos cuộn", "B": "Bánh quy Cosy", "C": "Coca cola 330ml", "D": "Sữa chua TH 100g"}, "dap_an": "B"}, {"id": 18, "cap": "M", "chu_de": "KHO", "cau_hoi": "Tồn cuối kỳ TRUNG BÌNH nhóm \"Bia rượu\"?", "options": {"A": "79", "B": "149", "C": "70", "D": "74,5"}, "dap_an": "D"}, {"id": 19, "cap": "M", "chu_de": "SALE", "cau_hoi": "DT vùng \"Hà Nội\" từ 01/04 đến 15/04/2026?", "options": {"A": "5.434.500", "B": "3.234.500", "C": "4.234.500", "D": "4.324.500"}, "dap_an": "C"}, {"id": 20, "cap": "S", "chu_de": "KT", "cau_hoi": "Vùng có TỔNG NỢ cao nhất (nguy hiểm nhất)?", "options": {"A": "Bắc Giang", "B": "Hà Nội", "C": "Hải Phòng", "D": "Nam Định"}, "dap_an": "C"}, {"id": 21, "cap": "S", "chu_de": "KHO", "cau_hoi": "SKU slow-mover có Stock Day CAO NHẤT?", "options": {"A": "SP01 Sữa tươi", "B": "SP05 Coca cola", "C": "SP07 Bánh quy Cosy", "D": "SP02 Sữa chua TH"}, "dap_an": "C"}]};
 
 const DE_NAMES = { de_1: 'Đề 1', de_2: 'Đề 2', de_3: 'Đề 3' };
 const TOPIC_LABELS = { CHUNG: 'Tổng hợp', SALE: 'Bán hàng', KT: 'Công nợ', KHO: 'Tồn kho' };
 
-let currentDe = '';
-let questions = [];
-let userAnswers = {};
-let submitted = false;
+let currentDe = '', questions = [], userAnswers = {}, submitted = false;
+let currentResult = null;
 
-function pickRandomDe() {
-  const keys = Object.keys(QUIZ_DATA);
-  return keys[Math.floor(Math.random() * keys.length)];
+// ── localStorage helpers ──
+function getUser() { try { return JSON.parse(localStorage.getItem('xcel_user') || 'null'); } catch { return null; } }
+function saveUser(u) { localStorage.setItem('xcel_user', JSON.stringify(u)); }
+function getHistory() { try { return JSON.parse(localStorage.getItem('xcel_history') || '[]'); } catch { return []; } }
+function saveHistory(h) { localStorage.setItem('xcel_history', JSON.stringify(h)); }
+
+// ── screen manager ──
+function showScreen(id) {
+  ['profile-screen','intro-screen','quiz-screen','result-screen','history-screen']
+    .forEach(s => document.getElementById(s).style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ── init ──
+function init() {
+  const user = getUser();
+  if (user) {
+    updateUserChip(user);
+    showScreen('intro-screen');
+  } else {
+    showScreen('profile-screen');
+  }
+}
+
+function updateUserChip(user) {
+  const chip = document.getElementById('user-chip');
+  chip.textContent = '👤 ' + user.name;
+  chip.style.display = 'block';
+}
+
+// ── profile ──
+function saveProfile() {
+  const name = document.getElementById('input-name').value.trim();
+  const email = document.getElementById('input-email').value.trim();
+  if (!name) { alert('Vui lòng nhập họ tên.'); return; }
+  if (!email || !email.includes('@')) { alert('Vui lòng nhập email hợp lệ.'); return; }
+  const user = { name, email };
+  saveUser(user);
+  updateUserChip(user);
+  showScreen('intro-screen');
+}
+
+function changeProfile() {
+  const user = getUser();
+  if (user) {
+    document.getElementById('input-name').value = user.name;
+    document.getElementById('input-email').value = user.email;
+  }
+  showScreen('profile-screen');
+}
+
+// ── quiz logic ──
 function startQuiz() {
-  currentDe = pickRandomDe();
+  const keys = Object.keys(QUIZ_DATA);
+  currentDe = keys[Math.floor(Math.random() * keys.length)];
   questions = QUIZ_DATA[currentDe];
-  userAnswers = {};
-  submitted = false;
-
-  document.getElementById('intro-screen').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'block';
-  document.getElementById('result-screen').style.display = 'none';
-
+  userAnswers = {}; submitted = false; currentResult = null;
+  showScreen('quiz-screen');
   renderQuestions();
   updateProgress();
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').textContent = 'Nộp bài & Xem điểm';
 }
 
 function renderQuestions() {
-  const container = document.getElementById('questions-container');
-  container.innerHTML = '';
-
+  const c = document.getElementById('questions-container');
+  c.innerHTML = '';
   questions.forEach((q, idx) => {
     const card = document.createElement('div');
-    card.className = 'question-card';
-    card.id = `q-card-${idx}`;
-
-    const topicLabel = TOPIC_LABELS[q.chu_de] || q.chu_de;
-
+    card.className = 'question-card'; card.id = 'q-card-' + idx;
     card.innerHTML = `
       <div class="q-header">
         <span class="q-num">Câu ${q.id}</span>
         <span class="badge badge-${q.cap}">${q.cap}</span>
-        <span class="badge-topic">${topicLabel}</span>
+        <span class="badge-topic">${TOPIC_LABELS[q.chu_de] || q.chu_de}</span>
       </div>
-      <div class="q-text">${escHtml(q.cau_hoi)}</div>
+      <div class="q-text">${esc(q.cau_hoi)}</div>
       <div class="options" id="opts-${idx}">
-        ${Object.entries(q.options).map(([key, val]) => `
-          <button class="option-btn" id="opt-${idx}-${key}" onclick="selectAnswer(${idx}, '${key}')">
-            <span class="opt-label">${key}</span>
-            <span>${val !== '' ? escHtml(val) : '<em style="opacity:.5">—</em>'}</span>
-          </button>
-        `).join('')}
+        ${Object.entries(q.options).map(([k,v]) => `
+          <button class="option-btn" id="opt-${idx}-${k}" onclick="selectAnswer(${idx},'${k}')">
+            <span class="opt-label">${k}</span>
+            <span>${v !== '' ? esc(v) : '<em style="opacity:.4">—</em>'}</span>
+          </button>`).join('')}
       </div>
-      <div class="feedback" id="feedback-${idx}" style="display:none"></div>
-    `;
-
-    container.appendChild(card);
+      <div class="feedback" id="feedback-${idx}" style="display:none"></div>`;
+    c.appendChild(card);
   });
 }
 
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function selectAnswer(qIdx, key) {
+function selectAnswer(idx, key) {
   if (submitted) return;
-
-  userAnswers[qIdx] = key;
-
-  const opts = document.querySelectorAll(`#opts-${qIdx} .option-btn`);
-  opts.forEach(btn => btn.classList.remove('selected'));
-  document.getElementById(`opt-${qIdx}-${key}`).classList.add('selected');
-
-  updateProgress();
-  updateSubmitBtn();
+  userAnswers[idx] = key;
+  document.querySelectorAll(`#opts-${idx} .option-btn`).forEach(b => b.classList.remove('selected'));
+  document.getElementById(`opt-${idx}-${key}`).classList.add('selected');
+  updateProgress(); updateSubmitBtn();
 }
 
 function updateProgress() {
-  const answered = Object.keys(userAnswers).length;
-  const total = questions.length;
-  const pct = (answered / total) * 100;
-  document.getElementById('progress-fill').style.width = pct + '%';
+  const answered = Object.keys(userAnswers).length, total = questions.length;
+  document.getElementById('progress-fill').style.width = (answered/total*100) + '%';
   document.getElementById('progress-text').textContent = `Đã trả lời ${answered}/${total} câu`;
 }
 
 function updateSubmitBtn() {
-  const answered = Object.keys(userAnswers).length;
-  document.getElementById('submit-btn').disabled = answered < questions.length;
-  if (answered > 0 && answered < questions.length) {
-    document.getElementById('submit-btn').textContent = `Nộp bài (còn ${questions.length - answered} câu chưa làm)`;
-    document.getElementById('submit-btn').disabled = false;
-  } else if (answered === questions.length) {
-    document.getElementById('submit-btn').textContent = '✅ Nộp bài & Xem điểm';
-    document.getElementById('submit-btn').disabled = false;
-  }
+  const answered = Object.keys(userAnswers).length, total = questions.length;
+  const btn = document.getElementById('submit-btn');
+  if (answered === 0) { btn.disabled = true; btn.textContent = 'Nộp bài & Xem điểm'; }
+  else if (answered < total) { btn.disabled = false; btn.textContent = `Nộp bài (còn ${total-answered} câu chưa làm)`; }
+  else { btn.disabled = false; btn.textContent = '✅ Nộp bài & Xem điểm'; }
 }
 
 function submitQuiz() {
   submitted = true;
   let correct = 0;
+  const wrongList = [];
 
   questions.forEach((q, idx) => {
-    const userAns = userAnswers[idx];
-    const rightAns = q.dap_an;
-    const card = document.getElementById(`q-card-${idx}`);
-    const feedbackEl = document.getElementById(`feedback-${idx}`);
-
-    const opts = document.querySelectorAll(`#opts-${idx} .option-btn`);
-    opts.forEach(btn => {
-      btn.disabled = true;
-      const btnKey = btn.id.split('-').pop();
-      if (btnKey === rightAns) btn.classList.add('correct');
-      else if (btnKey === userAns && userAns !== rightAns) btn.classList.add('wrong');
+    const userAns = userAnswers[idx], right = q.dap_an;
+    const card = document.getElementById('q-card-' + idx);
+    const fb = document.getElementById('feedback-' + idx);
+    document.querySelectorAll(`#opts-${idx} .option-btn`).forEach(b => {
+      b.disabled = true;
+      const k = b.id.split('-').pop();
+      if (k === right) b.classList.add('correct');
+      else if (k === userAns && userAns !== right) b.classList.add('wrong');
     });
-
-    if (userAns === rightAns) {
-      correct++;
-      card.classList.add('answered-correct');
-      feedbackEl.className = 'feedback correct';
-      feedbackEl.textContent = '✅ Đúng rồi!';
+    if (userAns === right) {
+      correct++; card.classList.add('answered-correct');
+      fb.className = 'feedback correct'; fb.textContent = '✅ Đúng rồi!';
     } else {
       card.classList.add('answered-wrong');
-      feedbackEl.className = 'feedback wrong';
-      feedbackEl.textContent = userAns
-        ? `❌ Sai. Đáp án đúng: ${rightAns}`
-        : `❌ Bỏ qua. Đáp án đúng: ${rightAns}`;
+      fb.className = 'feedback wrong';
+      fb.textContent = userAns ? `❌ Sai. Đáp án đúng: ${right}` : `❌ Bỏ qua. Đáp án đúng: ${right}`;
+      wrongList.push({ id: q.id, cau_hoi: q.cau_hoi, your: userAns || '(bỏ)', correct: right, correct_text: q.options[right] });
     }
-    feedbackEl.style.display = 'block';
+    fb.style.display = 'block';
   });
 
-  showResult(correct);
-}
-
-function showResult(correct) {
-  const total = questions.length;
-  const wrong = total - correct;
-  const pct = Math.round((correct / total) * 100);
-  const deg = (pct / 100) * 360;
-
-  document.getElementById('quiz-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'block';
-
-  document.getElementById('result-de-tag').textContent = `📋 ${DE_NAMES[currentDe]} — ${total} câu`;
-  document.getElementById('score-num').textContent = correct;
-  document.getElementById('score-total').textContent = `/ ${total}`;
-  document.getElementById('score-ring').style.setProperty('--deg', deg + 'deg');
-  document.getElementById('count-correct').textContent = correct;
-  document.getElementById('count-wrong').textContent = wrong;
-
+  const total = questions.length, pct = Math.round(correct/total*100);
   let title, msg;
   if (pct >= 90) { title = '🏆 Xuất sắc!'; msg = 'Bạn nắm vững nghiệp vụ Data Analytics. Sẵn sàng cho Senior!'; }
   else if (pct >= 70) { title = '🎉 Khá tốt!'; msg = 'Kỹ năng tốt, tiếp tục luyện tập phần nâng cao nhé.'; }
   else if (pct >= 50) { title = '📚 Cần ôn luyện thêm'; msg = 'Nền tảng ổn, nhưng cần củng cố thêm các hàm nâng cao.'; }
   else { title = '💪 Cố gắng lên!'; msg = 'Hãy ôn lại các hàm Excel cơ bản và làm lại nhé.'; }
 
-  document.getElementById('result-title').textContent = title;
-  document.getElementById('result-msg').textContent = msg;
+  const dateStr = new Date().toLocaleString('vi-VN');
+  currentResult = { id: Date.now(), date: dateStr, de: currentDe, deName: DE_NAMES[currentDe], score: correct, total, pct, title, wrongList };
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Save to history
+  const hist = getHistory();
+  hist.unshift(currentResult);
+  if (hist.length > 50) hist.pop();
+  saveHistory(hist);
+
+  showResult(currentResult);
+  autoSendEmail(currentResult);
 }
 
-function retryQuiz() {
-  document.getElementById('result-screen').style.display = 'none';
-  startQuiz();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function showResult(r) {
+  showScreen('result-screen');
+  const deg = (r.pct/100*360) + 'deg';
+  document.getElementById('result-de-tag').textContent = `📋 ${r.deName} — ${r.total} câu · ${r.date}`;
+  document.getElementById('score-ring').style.setProperty('--deg', deg);
+  document.getElementById('score-num').textContent = r.score;
+  document.getElementById('score-total').textContent = '/ ' + r.total;
+  document.getElementById('result-title').textContent = r.title;
+  document.getElementById('result-msg').textContent = 'Đạt ' + r.pct + '% · ' + r.msg || '';
+  document.getElementById('count-correct').textContent = r.score;
+  document.getElementById('count-wrong').textContent = r.total - r.score;
+  document.getElementById('result-msg').textContent = r.msg;
+
+  // Wrong review
+  const wr = document.getElementById('wrong-review');
+  if (r.wrongList.length === 0) {
+    wr.innerHTML = '<div style="text-align:center;padding:16px;background:#dcfce7;border-radius:12px;color:#166534;font-weight:700">🎯 Tuyệt vời — Bạn trả lời đúng tất cả!</div>';
+  } else {
+    wr.innerHTML = `<h3>❌ ${r.wrongList.length} câu cần xem lại</h3>` +
+      r.wrongList.map(w => `
+        <div class="wrong-item">
+          <div class="q-num-small">Câu ${w.id}</div>
+          <div class="q-text-small">${esc(w.cau_hoi)}</div>
+          <div class="wrong-answers">
+            <span class="your-ans">Bạn chọn: ${w.your}</span>
+            <span class="correct-ans">✓ Đúng: ${w.correct} — ${esc(w.correct_text)}</span>
+          </div>
+        </div>`).join('');
+  }
+
+  const emailStatus = document.getElementById('email-status');
+  emailStatus.style.display = 'none';
 }
+
+function retryQuiz() { startQuiz(); }
+function backToIntro() { showScreen('intro-screen'); }
+
+// ── Email ──
+function buildEmailParams(r) {
+  const user = getUser() || { name: 'Ẩn danh', email: '' };
+  const wrongText = r.wrongList.length === 0 ? 'Tất cả đúng!' :
+    r.wrongList.map(w => `Câu ${w.id}: Chọn ${w.your} → Đúng: ${w.correct} (${w.correct_text})`).join('\n');
+  return {
+    to_email: EMAIL_CFG.toEmail,
+    user_email: user.email,
+    user_name: user.name,
+    de_name: r.deName,
+    score: r.score,
+    total: r.total,
+    pct: r.pct,
+    title: r.title,
+    date: r.date,
+    wrong_count: r.wrongList.length,
+    wrong_details: wrongText,
+    reply_to: user.email
+  };
+}
+
+async function autoSendEmail(r) {
+  if (!EMAIL_CFG.publicKey) return;
+  const st = document.getElementById('email-status');
+  st.className = 'email-status sending'; st.textContent = '📧 Đang gửi báo cáo...'; st.style.display = 'block';
+  try {
+    emailjs.init(EMAIL_CFG.publicKey);
+    await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, buildEmailParams(r));
+    st.className = 'email-status sent'; st.textContent = '✅ Báo cáo đã gửi đến giang@xcel.vn';
+  } catch(e) {
+    st.style.display = 'none';
+  }
+}
+
+async function manualSendEmail() {
+  const r = currentResult;
+  if (!r) return;
+  const user = getUser() || { name: '', email: '' };
+
+  if (EMAIL_CFG.publicKey) {
+    const btn = document.getElementById('btn-send-email');
+    btn.disabled = true; btn.textContent = '⏳ Đang gửi...';
+    const st = document.getElementById('email-status');
+    st.className = 'email-status sending'; st.textContent = '📧 Đang gửi...'; st.style.display = 'block';
+    try {
+      emailjs.init(EMAIL_CFG.publicKey);
+      await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, buildEmailParams(r));
+      st.className = 'email-status sent'; st.textContent = '✅ Đã gửi thành công!';
+    } catch { st.style.display = 'none'; }
+    btn.disabled = false; btn.textContent = '📧 Gửi lại';
+  } else {
+    // Fallback: mailto
+    const wrongText = r.wrongList.map(w => `- Câu ${w.id}: chọn ${w.your}, đúng: ${w.correct}`).join('%0A');
+    const body = `Tên: ${user.name}%0AEmail: ${user.email}%0AĐề: ${r.deName}%0AĐiểm: ${r.score}/${r.total} (${r.pct}%)%0AThời gian: ${r.date}%0A%0ACâu sai:%0A${wrongText}`;
+    window.location.href = `mailto:${EMAIL_CFG.toEmail}?subject=[Kết quả test] ${user.name} - ${r.deName} - ${r.score}/${r.total}&body=${body}`;
+  }
+}
+
+// ── History screen ──
+function showHistory() {
+  const user = getUser();
+  const hist = getHistory();
+
+  const info = document.getElementById('history-user-info');
+  if (user) {
+    info.innerHTML = `<div><strong>${user.name}</strong> · <span style="color:var(--muted);font-size:13px">${user.email}</span></div>
+      <div style="display:flex;gap:8px">
+        <span style="font-size:13px;color:var(--muted)">${hist.length} bài đã làm</span>
+        <button class="btn-sm btn-danger-sm" onclick="clearHistory()">🗑 Xóa tất cả</button>
+      </div>`;
+  } else {
+    info.innerHTML = '<span style="color:var(--muted);font-size:13px">Chưa đăng nhập</span>';
+  }
+
+  const list = document.getElementById('history-list');
+  if (hist.length === 0) {
+    list.innerHTML = '<div class="history-empty"><div style="font-size:48px;margin-bottom:12px">📋</div><p>Chưa có bài test nào.</p><br><button class="btn-primary" onclick="backToIntro()">Làm bài ngay</button></div>';
+  } else {
+    list.innerHTML = hist.map((r, i) => {
+      const pctClass = r.pct >= 90 ? 'score-great' : r.pct >= 70 ? 'score-good' : r.pct >= 50 ? 'score-ok' : 'score-low';
+      const wrongSummary = r.wrongList && r.wrongList.length > 0
+        ? `Câu sai: ${r.wrongList.map(w => `#${w.id}`).join(', ')}`
+        : 'Đúng tất cả ✨';
+      return `
+        <div class="history-item">
+          <div class="history-meta">
+            <div>
+              <div class="history-de">${r.deName || 'Bài test'}</div>
+              <div class="history-date">${r.date}</div>
+            </div>
+            <div class="history-score-badge ${pctClass}">${r.score}/${r.total} · ${r.pct}%</div>
+          </div>
+          <div class="history-wrong-list">${r.title} · ${wrongSummary}</div>
+          <div class="history-actions">
+            <button class="btn-sm btn-email" onclick="sendHistoryEmail(${i})">📧 Gửi báo cáo</button>
+            <button class="btn-sm-outline" onclick="deleteHistoryItem(${i})">🗑</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  showScreen('history-screen');
+}
+
+async function sendHistoryEmail(idx) {
+  const hist = getHistory();
+  const r = hist[idx];
+  if (!r) return;
+
+  if (EMAIL_CFG.publicKey) {
+    try {
+      emailjs.init(EMAIL_CFG.publicKey);
+      await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, buildEmailParams(r));
+      alert('✅ Đã gửi báo cáo thành công!');
+    } catch { alert('Gửi thất bại. Vui lòng thử lại.'); }
+  } else {
+    const user = getUser() || { name: '', email: '' };
+    const wrongText = (r.wrongList || []).map(w => `- Câu ${w.id}: chọn ${w.your}, đúng: ${w.correct}`).join('%0A');
+    const body = `Tên: ${user.name}%0AEmail: ${user.email}%0AĐề: ${r.deName}%0AĐiểm: ${r.score}/${r.total} (${r.pct}%)%0AThời gian: ${r.date}%0A%0ACâu sai:%0A${wrongText || 'Không có'}`;
+    window.location.href = `mailto:${EMAIL_CFG.toEmail}?subject=[Kết quả test] ${user.name} - ${r.deName} - ${r.score}/${r.total}&body=${body}`;
+  }
+}
+
+function deleteHistoryItem(idx) {
+  if (!confirm('Xóa bài test này?')) return;
+  const hist = getHistory();
+  hist.splice(idx, 1);
+  saveHistory(hist);
+  showHistory();
+}
+
+function clearHistory() {
+  if (!confirm('Xóa toàn bộ lịch sử? Không thể hoàn tác.')) return;
+  saveHistory([]);
+  showHistory();
+}
+
+// ── Start ──
+init();
 </script>
 </body>
 </html>

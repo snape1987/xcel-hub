@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Excel & Power Query — Khoá học 3 ngày · Cô Giang Xcel</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --p: #4f46e5; --p2: #6d28d9; --p3: #7c3aed;
+    --teal: #0891b2; --emerald: #059669;
+    --amber: #d97706; --rose: #e11d48;
+    --bg: #f8f7ff; --card: #fff; --text: #1e1b4b; --muted: #6b7280;
+    --border: #e5e7eb;
+    --day1: #4f46e5; --day2: #7c3aed; --day3: #a855f7;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 70%, #5b21b6 100%);
+    color: white; padding: 80px 20px 64px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(139,92,246,.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(79,70,229,.2) 0%, transparent 50%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; position: relative; }
+  .by-line { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; opacity: .7; margin-bottom: 16px; }
+  .hero h1 { font-size: clamp(32px, 6vw, 58px); font-weight: 800; line-height: 1.15; margin-bottom: 8px; }
+  .hero h1 em { font-style: normal; color: #c4b5fd; }
+  .hero-sub { font-size: 17px; opacity: .85; margin-bottom: 32px; font-weight: 300; }
+  .hero-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 40px; }
+  .pill { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 99px; padding: 6px 18px; font-size: 13px; font-weight: 600; backdrop-filter: blur(4px); }
+  .pill.lang { background: rgba(196,181,253,.25); border-color: rgba(196,181,253,.5); color: #ddd6fe; }
+
+  /* ── FLOW ── */
+  .flow-section { background: white; padding: 56px 20px; }
+  .section-inner { max-width: 900px; margin: 0 auto; }
+  .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--p); font-weight: 700; margin-bottom: 8px; }
+  .section-title { font-size: clamp(22px, 4vw, 32px); font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .section-sub { color: var(--muted); font-size: 15px; max-width: 640px; margin-bottom: 40px; }
+  .flow-grid { display: flex; gap: 0; align-items: center; flex-wrap: wrap; justify-content: center; gap: 4px; }
+  .flow-step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .flow-num { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: white; }
+  .flow-step:nth-child(1) .flow-num, .flow-step:nth-child(2) .flow-num { background: var(--day1); }
+  .flow-step:nth-child(3) .flow-num, .flow-step:nth-child(4) .flow-num { background: var(--day2); }
+  .flow-step:nth-child(5) .flow-num, .flow-step:nth-child(6) .flow-num { background: var(--day3); }
+  .flow-name { font-size: 12px; font-weight: 700; color: var(--text); text-align: center; }
+  .flow-vi { font-size: 10px; color: var(--muted); text-align: center; }
+  .flow-arrow { font-size: 18px; color: var(--border); margin-bottom: 18px; }
+
+  /* ── DAYS ── */
+  .days-section { padding: 56px 20px; max-width: 900px; margin: 0 auto; }
+
+  .day-block { margin-bottom: 56px; }
+  .day-header {
+    display: flex; align-items: center; gap: 16px; padding: 20px 28px;
+    border-radius: 16px; margin-bottom: 24px; color: white;
+  }
+  .day-1 .day-header { background: linear-gradient(135deg, #4f46e5, #6d28d9); }
+  .day-2 .day-header { background: linear-gradient(135deg, #7c3aed, #9d174d); }
+  .day-3 .day-header { background: linear-gradient(135deg, #a855f7, #4f46e5); }
+  .day-badge { font-size: 11px; font-weight: 800; letter-spacing: 2px; background: rgba(255,255,255,.2); padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
+  .day-title { font-size: clamp(16px, 3vw, 22px); font-weight: 800; }
+  .day-subtitle { font-size: 13px; opacity: .8; margin-top: 2px; font-style: italic; }
+  .day-time { font-size: 13px; opacity: .75; margin-left: auto; white-space: nowrap; font-weight: 600; }
+
+  /* session card */
+  .session-time-label { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .session-time-label::before { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .session-time-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .session-q { font-size: 14px; color: var(--p); font-style: italic; margin-bottom: 16px; padding: 10px 16px; background: #f5f3ff; border-left: 3px solid var(--p); border-radius: 0 8px 8px 0; line-height: 1.5; }
+  .session-q span { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+  .session-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(79,70,229,.05); }
+  .session-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .session-title-vi { font-size: 13px; color: var(--muted); margin-bottom: 20px; font-weight: 400; }
+
+  .sub-section { margin-bottom: 18px; }
+  .sub-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; display: flex; align-items: baseline; gap: 8px; }
+  .sub-title .num { width: 22px; height: 22px; background: var(--p); color: white; border-radius: 50%; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sub-title-vi { font-size: 12px; color: var(--muted); font-weight: 400; font-style: italic; }
+  .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 30px; }
+  .bullet-list li { font-size: 14px; color: #374151; position: relative; }
+  .bullet-list li::before { content: '▸'; position: absolute; left: -18px; color: var(--p); font-weight: 700; }
+  .bullet-vi { display: block; font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px; line-height: 1.4; }
+
+  .tools-bar { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .tools-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .tools-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tool-chip { background: #f5f3ff; color: var(--p); border: 1px solid #ddd6fe; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+  /* ── OUTCOMES ── */
+  .outcomes-section { background: linear-gradient(135deg, #1e1b4b, #312e81); color: white; padding: 72px 20px; }
+  .outcomes-inner { max-width: 860px; margin: 0 auto; }
+  .outcomes-inner .section-label { color: #c4b5fd; }
+  .outcomes-inner .section-title { color: white; }
+  .outcomes-inner .section-sub { color: rgba(255,255,255,.7); }
+  .outcomes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }
+  .outcome-item { display: flex; gap: 14px; padding: 18px 20px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; }
+  .outcome-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .outcome-en { font-size: 14px; font-weight: 600; color: white; margin-bottom: 4px; }
+  .outcome-vi { font-size: 12px; color: rgba(255,255,255,.6); font-style: italic; line-height: 1.5; }
+
+  .handbook-card { margin-top: 36px; background: rgba(196,181,253,.15); border: 1px solid rgba(196,181,253,.3); border-radius: 14px; padding: 24px 28px; display: flex; gap: 16px; align-items: flex-start; }
+  .handbook-icon { font-size: 32px; flex-shrink: 0; }
+  .handbook-title { font-size: 16px; font-weight: 800; color: #ddd6fe; margin-bottom: 4px; }
+  .handbook-desc { font-size: 13px; color: rgba(255,255,255,.75); line-height: 1.6; }
+  .handbook-vi { font-style: italic; color: rgba(255,255,255,.55); margin-top: 4px; }
+
+  /* ── TRAINER ── */
+  .trainer-section { padding: 72px 20px; background: white; }
+  .trainer-inner { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: start; }
+  .trainer-name { font-size: clamp(24px, 4vw, 36px); font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .trainer-alias { font-size: 16px; color: var(--p); font-weight: 600; margin-bottom: 16px; }
+  .trainer-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .trainer-tag { border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 700; }
+  .tag-1 { background: #ede9fe; color: #5b21b6; }
+  .tag-2 { background: #d1fae5; color: #065f46; }
+  .tag-3 { background: #fef3c7; color: #92400e; }
+  .tag-4 { background: #fee2e2; color: #991b1b; }
+  .trainer-bio { font-size: 14px; color: #374151; line-height: 1.8; margin-bottom: 8px; }
+  .trainer-bio-vi { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.7; margin-bottom: 24px; }
+  .book-credit { display: flex; gap: 12px; align-items: flex-start; background: #f8f7ff; border: 1px solid #ddd6fe; border-radius: 10px; padding: 12px 16px; margin-bottom: 28px; }
+  .book-icon { font-size: 28px; flex-shrink: 0; }
+  .book-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .book-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .stats-row { display: flex; gap: 20px; flex-wrap: wrap; }
+  .stat-box { text-align: center; background: var(--bg); border-radius: 12px; padding: 16px 20px; min-width: 80px; }
+  .stat-num { font-size: 24px; font-weight: 800; color: var(--p); }
+  .stat-unit { font-size: 11px; color: var(--p); font-weight: 600; }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .trainer-photo-placeholder { width: 200px; height: 240px; border-radius: 20px; background: linear-gradient(135deg, #ede9fe, #ddd6fe); display: flex; align-items: center; justify-content: center; font-size: 80px; color: #a78bfa; border: 3px solid white; box-shadow: 0 8px 32px rgba(109,40,217,.15); flex-shrink: 0; }
+
+  /* ── CTA ── */
+  .cta-section { background: var(--bg); padding: 72px 20px; text-align: center; }
+  .cta-inner { max-width: 600px; margin: 0 auto; }
+  .cta-title { font-size: clamp(24px, 4vw, 36px); font-weight: 800; color: var(--text); margin-bottom: 12px; }
+  .cta-sub { color: var(--muted); font-size: 16px; margin-bottom: 36px; }
+  .cta-cards { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+  .cta-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 18px 24px; min-width: 140px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+  .cta-card-icon { font-size: 24px; margin-bottom: 6px; }
+  .cta-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .cta-card-value { font-size: 12px; color: var(--muted); }
+  .btn-cta { display: inline-block; background: linear-gradient(135deg, var(--p), var(--p3)); color: white; padding: 16px 44px; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 20px rgba(79,70,229,.35); transition: all .2s; }
+  .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(79,70,229,.45); }
+  .contact-row { margin-top: 20px; color: var(--muted); font-size: 14px; }
+  .contact-row a { color: var(--p); text-decoration: none; font-weight: 600; }
+
+  /* ── FOOTER ── */
+  footer { background: #1e1b4b; color: rgba(255,255,255,.5); text-align: center; padding: 24px 20px; font-size: 13px; }
+  footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .day-time { display: none; }
+    .trainer-inner { grid-template-columns: 1fr; }
+    .trainer-photo-placeholder { display: none; }
+    .flow-arrow { display: none; }
+    .outcomes-grid { grid-template-columns: 1fr; }
+    .session-card { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="by-line">By Cô Giang Xcel · Đoàn Thị Hương Giang</div>
+    <h1>Training Agenda<br><em>Advanced Excel & Power Query</em></h1>
+    <p class="hero-sub">Từ nền tảng dữ liệu đến hệ thống báo cáo tự động hoàn chỉnh</p>
+    <div class="hero-pills">
+      <span class="pill">3 Ngày</span>
+      <span class="pill">6 Buổi học</span>
+      <span class="pill">18 Giờ</span>
+      <span class="pill">~25 Học viên</span>
+      <span class="pill lang">English · Tiếng Việt</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6-SESSION FLOW ══ -->
+<section class="flow-section">
+  <div class="section-inner">
+    <div class="section-label">Dòng chảy khoá học</div>
+    <div class="section-title">The 6-Session Flow</div>
+    <p class="section-sub">Mỗi buổi học xây trên buổi trước — dữ liệu sạch → tra cứu → pivot → dashboard → Power Query tự động hoá → Power BI + AI mở rộng toàn doanh nghiệp.</p>
+    <div class="flow-grid">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div class="flow-name">Clean Data</div>
+        <div class="flow-vi">Làm sạch DL</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div class="flow-name">Lookup & Enrich</div>
+        <div class="flow-vi">Tra cứu & Mở rộng</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div class="flow-name">Pivot Table</div>
+        <div class="flow-vi">Pivot Table</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div class="flow-name">Charts & Dashboard</div>
+        <div class="flow-vi">Biểu đồ & Dashboard</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-num">05</div>
+        <div class="flow-name">Power Query</div>
+        <div class="flow-vi">Power Query</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-num">06</div>
+        <div class="flow-name">Power BI + AI</div>
+        <div class="flow-vi">Power BI + AI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DAY 1 ══ -->
+<div class="days-section">
+
+  <div class="day-block day-1">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">DAY 1</div>
+        <div class="day-title">From Broken Data to Numbers You Can Trust</div>
+        <div class="day-subtitle">Từ dữ liệu lỗi đến con số đáng tin cậy</div>
+      </div>
+      <div class="day-time">08:30 – 16:30</div>
+    </div>
+
+    <!-- Session 1 -->
+    <div class="session-time-label">☀ Buổi sáng · 08:30 – 11:30</div>
+    <div class="session-q">When formulas look right but numbers are wrong — where does the error start?<span>Công thức kéo đúng mà vẫn ra số sai — lỗi bắt đầu từ đâu?</span></div>
+    <div class="session-card">
+      <div class="session-title">Session 1: Data Foundations & Cleaning</div>
+      <div class="session-title-vi">Buổi 1: Nền tảng dữ liệu & làm sạch</div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">1</span> Understand the Data Model <span class="sub-title-vi">Hiểu mô hình dữ liệu — nền tảng mọi báo cáo</span></div>
+        <ul class="bullet-list">
+          <li>Grain: what does one row represent? — every report must answer this first<span class="bullet-vi">Grain: 1 dòng nói lên điều gì? — mọi báo cáo phải trả lời câu này trước tiên</span></li>
+          <li>Dimension table: lookup / classification data — Product, Customer, Region<span class="bullet-vi">Bảng Dimension: dữ liệu phân loại — Sản phẩm, Khách hàng, Khu vực</span></li>
+          <li>Fact table: transaction / measurement data — the source that feeds every formula<span class="bullet-vi">Bảng Fact: dữ liệu giao dịch, số đo lường — nguồn cung cấp cho mọi công thức</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">2</span> Detect & Repair Structural Errors <span class="sub-title-vi">Phát hiện & sửa lỗi cấu trúc</span></div>
+        <ul class="bullet-list">
+          <li>Merged cells, multi-row headers, blank rows inside data — the silent formula-killers<span class="bullet-vi">Ô gộp, tiêu đề nhiều dòng, dòng trống chen giữa bảng — nguyên nhân 90% công thức báo sai</span></li>
+          <li>Ctrl+G → Go To Special → Blanks: select ALL blanks at once, fill or delete in one move<span class="bullet-vi">Ctrl+G → Go To Special → Blanks: chọn toàn bộ ô trống cùng lúc, điền/xóa 1 thao tác</span></li>
+          <li>Numbers stored as text: identify, convert — SUMIFS and Pivot count them correctly<span class="bullet-vi">Số lưu dạng văn bản: nhận biết và chuyển đổi — SUMIFS, Pivot tính đúng ngay</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">3</span> Enforce Team-Wide Data Standards <span class="sub-title-vi">Thiết lập chuẩn nhập liệu toàn đội</span></div>
+        <ul class="bullet-list">
+          <li>Format Cells: number, date, currency, custom codes — one visual standard for all<span class="bullet-vi">Format Cells: số, ngày, tiền tệ, mã tùy chỉnh — toàn đội dùng chung 1 chuẩn hiển thị</span></li>
+          <li>Data Validation: dropdown list, date range, custom formula — block wrong input at source<span class="bullet-vi">Data Validation: danh sách xổ, kiểm tra ngày, công thức — chặn nhập sai từ nguồn, không sửa sau</span></li>
+        </ul>
+      </div>
+
+      <div class="tools-bar">
+        <div class="tools-label">Applied Tools</div>
+        <div class="tools-chips">
+          <span class="tool-chip">Ctrl+G Go To Special</span><span class="tool-chip">Format Cells (Custom, Date, Currency)</span><span class="tool-chip">Data Validation</span><span class="tool-chip">Text-to-Columns</span><span class="tool-chip">Flash Fill</span><span class="tool-chip">Remove Duplicates</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session 2 -->
+    <div class="session-time-label">⛅ Buổi chiều · 13:00 – 16:00</div>
+    <div class="session-q">Revenue by department × month × product — 30 minutes of SUMIFS and still wrong?<span>Doanh thu theo bộ phận × tháng × sản phẩm — viết SUMIFS 30 phút vẫn ra sai?</span></div>
+    <div class="session-card">
+      <div class="session-title">Session 2: Lookup & Data Enrichment</div>
+      <div class="session-title-vi">Buổi 2: Tra cứu & Mở rộng dữ liệu</div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">1</span> Replace VLOOKUP With XLOOKUP — Permanently <span class="sub-title-vi">Thay VLOOKUP bằng XLOOKUP — vĩnh viễn</span></div>
+        <ul class="bullet-list">
+          <li>XLOOKUP: look up by any key, return any column, any direction — no column counting ever again<span class="bullet-vi">XLOOKUP: tra theo bất kỳ khoá, trả về bất kỳ cột, bất kỳ hướng — không đếm cột, không lỗi khi chèn cột</span></li>
+          <li>Enrich Fact table from Dim tables: pull Name, Phone, Category, Price automatically<span class="bullet-vi">Mở rộng bảng Fact từ bảng Dim: lấy Tên, SĐT, Danh mục, Giá tự động — mô hình Fact–Dim thực tế</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">2</span> Multi-Condition Aggregation: SUMIFS & COUNTIFS <span class="sub-title-vi">Tổng hợp đa điều kiện</span></div>
+        <ul class="bullet-list">
+          <li>SUMIFS: aggregate by department × month × product simultaneously in one formula<span class="bullet-vi">SUMIFS: tổng hợp theo bộ phận × tháng × sản phẩm cùng lúc trong 1 công thức duy nhất</span></li>
+          <li>IF / IFS: flag missed targets, classify performance tiers — decision logic inside the cell<span class="bullet-vi">IF / IFS: đánh dấu không đạt, phân hạng hiệu suất — logic quyết định nằm ngay trong ô</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">3</span> Dynamic Arrays + Preview of the Next Level <span class="sub-title-vi">Mảng động + nhìn trước cấp độ tiếp theo</span></div>
+        <ul class="bullet-list">
+          <li>FILTER + UNIQUE: lists that update themselves automatically when data changes<span class="bullet-vi">FILTER + UNIQUE: danh sách tự cập nhật khi dữ liệu nguồn thay đổi — không lọc thủ công</span></li>
+          <li>Preview → Merge Queries (Power Query, Day 3): across multiple files, this replaces XLOOKUP at any scale<span class="bullet-vi">Nhìn trước → Merge Queries: khi dữ liệu trải nhiều file, thay XLOOKUP ở quy mô lớn</span></li>
+        </ul>
+      </div>
+
+      <div class="tools-bar">
+        <div class="tools-label">Applied Tools</div>
+        <div class="tools-chips">
+          <span class="tool-chip">XLOOKUP</span><span class="tool-chip">SUMIFS</span><span class="tool-chip">COUNTIFS</span><span class="tool-chip">IF / IFS</span><span class="tool-chip">FILTER</span><span class="tool-chip">UNIQUE</span><span class="tool-chip">IFERROR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DAY 2 ══ -->
+  <div class="day-block day-2">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">DAY 2</div>
+        <div class="day-title">From Data to Insight — Pivot, Charts & Dashboard</div>
+        <div class="day-subtitle">Từ dữ liệu thô đến insight & báo cáo tương tác</div>
+      </div>
+      <div class="day-time">08:30 – 16:30</div>
+    </div>
+
+    <!-- Session 3 -->
+    <div class="session-time-label">☀ Buổi sáng · 08:30 – 11:30</div>
+    <div class="session-q">Revenue by team, top 10 customers, growth vs last year — can you produce that on the spot?<span>Doanh thu theo phòng KD, top 10 khách, tăng trưởng so cùng kỳ — ra ngay được không?</span></div>
+    <div class="session-card">
+      <div class="session-title">Session 3: Pivot Table Mastery</div>
+      <div class="session-title-vi">Buổi 3: Thành thạo Pivot Table — mọi báo cáo trong vài phút</div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">1</span> Build a Report-Ready Pivot in Minutes <span class="sub-title-vi">Xây Pivot chuẩn báo cáo trong vài phút</span></div>
+        <ul class="bullet-list">
+          <li>Tabular layout, number format, hide Field Headers — output you can paste into any slide immediately<span class="bullet-vi">Tabular layout, định dạng số, ẩn Field Headers — kết quả paste vào slide ngay được</span></li>
+          <li>Top 10 filter: best customers by revenue + order count, with name and region auto-populated<span class="bullet-vi">Lọc Top 10: khách đầu bảng theo doanh thu + số đơn, tên và tỉnh/thành tự điền</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">2</span> Advanced Analysis Built Into Pivot <span class="sub-title-vi">Phân tích nâng cao ngay trong Pivot</span></div>
+        <ul class="bullet-list">
+          <li>Show Value As: % of Grand Total, % of Row, % of Column — contribution share without extra formulas<span class="bullet-vi">Show Value As: % tổng, % dòng, % cột — tỷ trọng hiển thị ngay, không cần công thức bổ sung</span></li>
+          <li>Difference From & % Difference From: MoM and YoY growth built directly into Pivot<span class="bullet-vi">Difference From & % Difference From: tăng trưởng MoM, YoY có sẵn trong Pivot — không cần cột phụ</span></li>
+          <li>Group by date, Running Total — time-series analysis with a few clicks<span class="bullet-vi">Group theo ngày, Running Total — phân tích chuỗi thời gian chỉ với vài cú click</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">3</span> Make the Report Fully Interactive <span class="sub-title-vi">Biến báo cáo thành báo cáo tương tác</span></div>
+        <ul class="bullet-list">
+          <li>Slicer: one visual filter — click Region, all pivot views update instantly<span class="bullet-vi">Slicer: 1 bộ lọc trực quan — click chọn Vùng, toàn bộ Pivot cập nhật tức thì</span></li>
+          <li>Report Connections: one Slicer controls multiple Pivot Tables simultaneously<span class="bullet-vi">Report Connections: 1 Slicer điều khiển nhiều Pivot cùng lúc — mọi bảng đồng bộ</span></li>
+        </ul>
+      </div>
+
+      <div class="tools-bar">
+        <div class="tools-label">Applied Tools</div>
+        <div class="tools-chips">
+          <span class="tool-chip">Pivot Table</span><span class="tool-chip">Tabular Layout</span><span class="tool-chip">Value Field Settings</span><span class="tool-chip">Top 10 Filter</span><span class="tool-chip">Show Value As</span><span class="tool-chip">Group</span><span class="tool-chip">Slicer</span><span class="tool-chip">Report Connections</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session 4 -->
+    <div class="session-time-label">⛅ Buổi chiều · 13:00 – 16:00</div>
+    <div class="session-q">A dashboard looks great — until someone hits the slicer and the chart doesn't update?<span>Dashboard trông đẹp — cho đến khi ai đó click Slicer và biểu đồ không cập nhật?</span></div>
+    <div class="session-card">
+      <div class="session-title">Session 4: Charts & Dashboard</div>
+      <div class="session-title-vi">Buổi 4: Biểu đồ & Dashboard tương tác</div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">1</span> Choose & Format the Right Chart <span class="sub-title-vi">Chọn đúng biểu đồ & format chuyên nghiệp</span></div>
+        <ul class="bullet-list">
+          <li>Column (compare), Bar (rank), Line (trend), Combo dual-axis (KPI + growth on one chart)<span class="bullet-vi">Column (so sánh), Bar (xếp hạng), Line (xu hướng), Combo 2 trục (KPI + tăng trưởng trên 1 biểu đồ)</span></li>
+          <li>Format mastery: consistent palette, axis scale, gap width, data labels — production-quality in 5 minutes<span class="bullet-vi">Format nâng cao: bộ màu nhất quán, thang trục, gap width, nhãn số liệu — biểu đồ chuyên nghiệp trong 5 phút</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">2</span> Creative Charts That Stand Out <span class="sub-title-vi">Biểu đồ sáng tạo — khác biệt so với báo cáo thông thường</span></div>
+        <ul class="bullet-list">
+          <li>Doughnut progress ring, stacked % bar, target-line column, Waterfall — advanced visual storytelling<span class="bullet-vi">Vòng tiến độ Doughnut, thanh tỷ trọng, cột kèm kế hoạch, Waterfall — kể chuyện bằng hình ảnh nâng cao</span></li>
+          <li>Build 6 chart types from one dataset — creative production-quality charts in one session<span class="bullet-vi">Xây 6 kiểu biểu đồ từ cùng 1 bộ dữ liệu — chất lượng thực chiến, hoàn thành trong 1 buổi</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">3</span> Design & Build the Full Interactive Dashboard <span class="sub-title-vi">Thiết kế & xây Dashboard tương tác hoàn chỉnh</span></div>
+        <ul class="bullet-list">
+          <li>Layout design first: header zone · KPI card zone · chart area · slicer panel — plan before build<span class="bullet-vi">Thiết kế layout trước: vùng header, thẻ KPI, biểu đồ, slicer — phác thảo trước khi xây</span></li>
+          <li>KPI cards: #,##0.0,,"M" number format · ▲▼ icon conditional formatting · vs-target badge<span class="bullet-vi">Thẻ KPI chuẩn: định dạng M, icon ▲▼ màu điều kiện, badge so sánh kế hoạch</span></li>
+          <li>One Slicer filters all KPIs + all charts simultaneously — connected via Report Connections<span class="bullet-vi">1 Slicer lọc tất cả KPI + tất cả biểu đồ cùng lúc — kết nối qua Report Connections</span></li>
+        </ul>
+      </div>
+
+      <div class="tools-bar">
+        <div class="tools-label">Applied Tools</div>
+        <div class="tools-chips">
+          <span class="tool-chip">Insert Chart</span><span class="tool-chip">Combo Chart (2 Axes)</span><span class="tool-chip">Doughnut</span><span class="tool-chip">Waterfall</span><span class="tool-chip">KPI Number Format</span><span class="tool-chip">Conditional Formatting (▲▼)</span><span class="tool-chip">Slicer</span><span class="tool-chip">Report Connections</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DAY 3 ══ -->
+  <div class="day-block day-3">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">DAY 3</div>
+        <div class="day-title">Automate & Scale — Power Query, Power BI + AI</div>
+        <div class="day-subtitle">Tự động hoá & mở rộng — Power Query, Power BI + AI</div>
+      </div>
+      <div class="day-time">08:30 – 16:30</div>
+    </div>
+
+    <!-- Session 5 -->
+    <div class="session-time-label">☀ Buổi sáng · 08:30 – 11:30</div>
+    <div class="session-q">10 branch files every month, all different formats — consolidate by hand, then start over next month?<span>10 file chi nhánh mỗi tháng, định dạng khác nhau — gộp tay xong, tháng sau lại làm lại từ đầu?</span></div>
+    <div class="session-card">
+      <div class="session-title">Session 5: Power Query — Tame the Uninvited Guest</div>
+      <div class="session-title-vi">Buổi 5: Power Query — Thuần hoá "khách không mời mà tới"</div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">1</span> Power Query Overview + From Folder <span class="sub-title-vi">Tổng quan Power Query + From Folder — nền tảng tự động hoá</span></div>
+        <ul class="bullet-list">
+          <li>Power Query is the automation layer between raw data and your report — every step recorded, re-run on Refresh<span class="bullet-vi">Power Query là lớp tự động giữa dữ liệu thô và báo cáo — mọi bước ghi lại, nhấn Refresh là chạy lại</span></li>
+          <li>"Uninvited guest" case: From Folder auto-detects all xlsx — add a new branch file, Refresh picks it up instantly<span class="bullet-vi">Bài toán "khách không mời mà tới": From Folder tự nhận diện mọi file xlsx — thêm file, Refresh là có ngay</span></li>
+          <li>Append Queries: stack 12 monthly files into one clean consolidated table — 3 seconds, not 3 hours<span class="bullet-vi">Append Queries: chồng 12 file tháng thành 1 bảng tổng hợp — 3 giây thay 3 giờ làm tay</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">2</span> Transform Pipeline — Define Once, Run Every Month <span class="sub-title-vi">Pipeline xử lý — định nghĩa 1 lần, chạy mãi mãi</span></div>
+        <ul class="bullet-list">
+          <li>Filter rows, Remove columns, Rename headers, Change Type — chain steps into a reusable pipeline<span class="bullet-vi">Filter, Remove Columns, Rename, Change Type — chuỗi các bước thành pipeline tái sử dụng mỗi tháng</span></li>
+          <li>Unpivot Columns: reshape wide pivot-style files (months as columns) into flat, workable data<span class="bullet-vi">Unpivot Columns: chuyển file rộng (tháng trải thành cột) thành bảng phẳng — kỹ thuật "cứu" file sai cấu trúc</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">3</span> Merge Queries & M Code — Handle Any File Structure <span class="sub-title-vi">Merge Queries & M Code — xử lý mọi cấu trúc file</span></div>
+        <ul class="bullet-list">
+          <li>Merge Queries: join Fact table with Dim tables by key — XLOOKUP at any scale, fully automatic on Refresh<span class="bullet-vi">Merge Queries: ghép Fact với Dim theo khoá — như XLOOKUP nhưng triệu dòng, nhiều file, tự refresh</span></li>
+          <li>M code for flexibility: Table.Combine, Excel.Workbook, Table.SelectRows, Text.Contains<span class="bullet-vi">M code linh hoạt: làm những gì giao diện không làm được</span></li>
+        </ul>
+      </div>
+
+      <div class="tools-bar">
+        <div class="tools-label">Applied Tools</div>
+        <div class="tools-chips">
+          <span class="tool-chip">From Folder</span><span class="tool-chip">From File</span><span class="tool-chip">Filter Rows</span><span class="tool-chip">Remove Columns</span><span class="tool-chip">Unpivot Columns</span><span class="tool-chip">Append Queries</span><span class="tool-chip">Merge Queries (Left Join)</span><span class="tool-chip">M Code</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session 6 -->
+    <div class="session-time-label">⛅ Buổi chiều · 13:00 – 16:00</div>
+    <div class="session-q">Pivot has a ceiling — can't join multiple sources, can't compute KPIs across every filter?<span>Pivot đến giới hạn — không ghép nhiều nguồn, không tính KPI theo mọi chiều lọc?</span></div>
+    <div class="session-card">
+      <div class="session-title">Session 6: Power BI & DAX + Claude AI / Copilot</div>
+      <div class="session-title-vi">Buổi 6: Power BI & DAX + Claude AI / Copilot — Hệ thống báo cáo hoàn chỉnh</div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">1</span> Power BI Data Model — Replace All VLOOKUP <span class="sub-title-vi">Mô hình dữ liệu Power BI — thay toàn bộ VLOOKUP bằng 1 kết nối</span></div>
+        <ul class="bullet-list">
+          <li>Power BI Desktop: Report · Data · Model — understand the 3-layer workspace in 15 minutes<span class="bullet-vi">Power BI Desktop: 3 giao diện Report / Data / Model — nắm vững kiến trúc trong 15 phút đầu</span></li>
+          <li>Define Fact–Dim relationships: one persistent link that powers all measures across the report<span class="bullet-vi">Quan hệ Fact–Dim: 1 kết nối duy trì thay toàn bộ VLOOKUP — mọi measure tự tính đúng theo chiều lọc</span></li>
+          <li>Build interactive visuals: KPI cards, bar/line charts, slicers — cross-filter by design<span class="bullet-vi">Xây visuals tương tác: thẻ KPI, cột/đường, slicer — tự lọc chéo nhau theo mặc định</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">2</span> DAX Measures — Compute What Pivot Cannot <span class="sub-title-vi">DAX Measures — tính những gì Pivot không bao giờ làm được</span></div>
+        <ul class="bullet-list">
+          <li>CALCULATE: override filter context — compute revenue for a specific segment regardless of slicer<span class="bullet-vi">CALCULATE: ghi đè filter context — tính doanh thu cho 1 phân khúc cụ thể bất kể slicer đang lọc gì</span></li>
+          <li>SUMX: row-by-row calculation — margin per transaction, weighted averages at any granularity<span class="bullet-vi">SUMX: tính từng dòng — margin mỗi giao dịch, trung bình có trọng số ở bất kỳ độ chi tiết nào</span></li>
+          <li>DIVIDE (safe division) · DATEADD (YoY, MoM) — KPI measures that auto-recalculate on every slicer click<span class="bullet-vi">DIVIDE (chia an toàn) · DATEADD (YoY, MoM) — measures KPI tự tính lại theo từng click slicer</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title"><span class="num">3</span> AI-Powered Productivity: Claude AI + Copilot <span class="sub-title-vi">Tăng năng suất bằng AI: Claude AI + Copilot trong Excel</span></div>
+        <ul class="bullet-list">
+          <li>Describe in plain language → get any SUMIFS, XLOOKUP, or M code in seconds — no syntax memorisation<span class="bullet-vi">Mô tả bằng tiếng Việt → ra SUMIFS, XLOOKUP, M code trong vài giây — không cần nhớ cú pháp</span></li>
+          <li>Generate DAX from a business question: 'calculate YoY growth by region' → CALCULATE + DATEADD<span class="bullet-vi">Soạn DAX từ câu hỏi nghiệp vụ: 'tính tăng trưởng YoY theo vùng' → CALCULATE + DATEADD ngay</span></li>
+          <li>Explain any formula, debug M code, review data model logic — AI as your co-analyst, available 24/7<span class="bullet-vi">Giải thích công thức khó, debug M code, kiểm tra mô hình dữ liệu — AI như người cộng sự phân tích 24/7</span></li>
+        </ul>
+      </div>
+
+      <div class="tools-bar">
+        <div class="tools-label">Applied Tools</div>
+        <div class="tools-chips">
+          <span class="tool-chip">Power BI Desktop</span><span class="tool-chip">Data Model (Relationships)</span><span class="tool-chip">DAX: CALCULATE</span><span class="tool-chip">SUMX</span><span class="tool-chip">DIVIDE</span><span class="tool-chip">DATEADD</span><span class="tool-chip">SAMEPERIODLASTYEAR</span><span class="tool-chip">Power BI Service</span><span class="tool-chip">Claude AI</span><span class="tool-chip">Copilot in Excel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ OUTCOMES ══ -->
+<section class="outcomes-section">
+  <div class="outcomes-inner">
+    <div class="section-label">Expected Outcomes</div>
+    <div class="section-title">Kết quả sau khoá học</div>
+    <p class="section-sub" style="color:rgba(255,255,255,.65);margin-bottom:32px">6 năng lực bạn mang về sau 3 ngày — áp dụng ngay vào công việc thực tế.</p>
+    <div class="outcomes-grid">
+      <div class="outcome-item">
+        <div class="outcome-icon">🏗️</div>
+        <div>
+          <div class="outcome-en">Build the right data model (Grain, Dim, Fact) — every tool downstream works correctly</div>
+          <div class="outcome-vi">Xây mô hình dữ liệu đúng (Grain, Dim, Fact) — mọi công cụ phía sau hoạt động chính xác</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon">🧹</div>
+        <div>
+          <div class="outcome-en">Clean any broken dataset with Ctrl+G, Format Cells, Data Validation — minutes, not hours</div>
+          <div class="outcome-vi">Làm sạch bất kỳ dữ liệu lỗi với Ctrl+G, Format Cells, Data Validation — vài phút thay vì vài giờ</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon">🔗</div>
+        <div>
+          <div class="outcome-en">Enrich and aggregate across tables: XLOOKUP, SUMIFS, FILTER — with complete confidence</div>
+          <div class="outcome-vi">Tra cứu & mở rộng dữ liệu qua bảng: XLOOKUP, SUMIFS, FILTER — thuần thục, không còn công thức sai</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon">📊</div>
+        <div>
+          <div class="outcome-en">Pivot any dataset + build interactive dashboards with KPI cards and slicers — no coding</div>
+          <div class="outcome-vi">Pivot tức thì & xây Dashboard tương tác với thẻ KPI, Slicer — không cần lập trình</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon">📈</div>
+        <div>
+          <div class="outcome-en">Build the right chart — from standard to creative — production-quality, presentation-ready</div>
+          <div class="outcome-vi">Vẽ đúng biểu đồ — từ cơ bản đến sáng tạo — chuẩn chất lượng thực chiến, trình bày được ngay</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon">⚡</div>
+        <div>
+          <div class="outcome-en">Automate with Power Query + M code · Power BI + DAX · use AI to write formulas instantly</div>
+          <div class="outcome-vi">Tự động hoá bằng PQ + M code; Power BI + DAX; AI viết công thức và DAX bằng tiếng Việt</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="handbook-card">
+      <div class="handbook-icon">📘</div>
+      <div>
+        <div class="handbook-title">Includes a Step-by-Step Practice Handbook · Bilingual EN / VN</div>
+        <div class="handbook-desc">Every exercise is documented as detailed, illustrated technical steps in English & Tiếng Việt — reproduce each workflow on your own data long after the class ends.</div>
+        <div class="handbook-vi">Cẩm nang thực hành đi kèm khoá học: hướng dẫn chi tiết từng bước kỹ thuật cho mỗi bài tập, song ngữ Anh – Việt — tự làm lại trên dữ liệu của bạn sau buổi học.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRAINER ══ -->
+<section class="trainer-section">
+  <div class="trainer-inner">
+    <div>
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--p);font-weight:700;margin-bottom:12px">Trainer Profile · Giảng viên</div>
+      <div class="trainer-name">Đoàn Thị Hương Giang</div>
+      <div class="trainer-alias">Cô Giang Xcel</div>
+      <div class="trainer-tags">
+        <span class="trainer-tag tag-1">Full-time Trainer</span>
+        <span class="trainer-tag tag-2">Coach</span>
+        <span class="trainer-tag tag-3">Author</span>
+        <span class="trainer-tag tag-4">Reporting Expert</span>
+      </div>
+      <p class="trainer-bio">Full-time Excel trainer (6 years) and business reporting consultant, built on a 10-year foundation in market research. Pairing the structured analytical thinking of research with hands-on Excel skill, every session ties directly to real business problems.</p>
+      <p class="trainer-bio-vi">Giảng viên Excel toàn thời gian (6 năm), chuyên gia báo cáo quản trị doanh nghiệp, với nền tảng 10 năm nghiên cứu thị trường. Sự kết hợp giữa tư duy phân tích có cấu trúc và kỹ năng Excel thực chiến giúp mỗi buổi học gắn liền với bài toán thực tế của doanh nghiệp.</p>
+      <div class="book-credit">
+        <div class="book-icon">📗</div>
+        <div>
+          <div class="book-title">Co-author — "Google Sheets for the Office"</div>
+          <div class="book-sub">Đồng tác giả · 6,500+ bản đã bán · Đã đào tạo tại BIDV, Viettel, Nutreco và 30+ doanh nghiệp lớn với 4,000+ học viên.</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num">6</div><div class="stat-unit">năm</div><div class="stat-label">Full-time</div></div>
+        <div class="stat-box"><div class="stat-num">10</div><div class="stat-unit">năm</div><div class="stat-label">Market Research</div></div>
+        <div class="stat-box"><div class="stat-num">30+</div><div class="stat-unit"></div><div class="stat-label">Doanh nghiệp</div></div>
+        <div class="stat-box"><div class="stat-num">4K+</div><div class="stat-unit"></div><div class="stat-label">Học viên</div></div>
+        <div class="stat-box"><div class="stat-num">6,500</div><div class="stat-unit"></div><div class="stat-label">Sách đã bán</div></div>
+      </div>
+    </div>
+    <div class="trainer-photo-placeholder">👩‍💼</div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-title">Đăng ký khoá học</div>
+    <p class="cta-sub">3 ngày thực chiến — từ dữ liệu lỗi đến hệ thống báo cáo tự động hoàn chỉnh.</p>
+    <div class="cta-cards">
+      <div class="cta-card"><div class="cta-card-icon">📅</div><div class="cta-card-title">3 Ngày</div><div class="cta-card-value">18 giờ học thực chiến</div></div>
+      <div class="cta-card"><div class="cta-card-icon">👥</div><div class="cta-card-title">~25 học viên</div><div class="cta-card-value">Lớp nhỏ, chất lượng cao</div></div>
+      <div class="cta-card"><div class="cta-card-icon">🌐</div><div class="cta-card-title">Song ngữ</div><div class="cta-card-value">English · Tiếng Việt</div></div>
+      <div class="cta-card"><div class="cta-card-icon">📘</div><div class="cta-card-title">Tài liệu</div><div class="cta-card-value">Handbook thực hành đi kèm</div></div>
+    </div>
+    <a href="mailto:giang@xcel.vn" class="btn-cta">📩 Liên hệ đăng ký ngay</a>
+    <div class="contact-row" style="margin-top:16px">
+      Email: <a href="mailto:giang@xcel.vn">giang@xcel.vn</a> &nbsp;·&nbsp; Hotline: <a href="tel:0983999886">0983 999 886</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>Cô Giang Xcel · AZCEL Group · <a href="https://xcel.vn">xcel.vn</a> · © 2026</div>
+</footer>
+
+</body>
+</html>
