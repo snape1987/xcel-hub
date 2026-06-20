@@ -175,7 +175,7 @@
       <div class="logo">hub.xcel.vn</div>
       <h1>📊 Trắc Nghiệm Data Analytics</h1>
     </div>
-    <button class="btn-history" onclick="showHistory()">📋 Lịch sử</button>
+    <button class="btn-history" id="btn-history" onclick="showHistory()" style="display:none">📋 Lịch sử</button>
   </div>
 </header>
 
@@ -294,8 +294,9 @@ let currentResult = null;
 // ── localStorage helpers ──
 function getUser() { try { return JSON.parse(localStorage.getItem('xcel_user') || 'null'); } catch { return null; } }
 function saveUser(u) { localStorage.setItem('xcel_user', JSON.stringify(u)); }
-function getHistory() { try { return JSON.parse(localStorage.getItem('xcel_history') || '[]'); } catch { return []; } }
-function saveHistory(h) { localStorage.setItem('xcel_history', JSON.stringify(h)); }
+function histKey(email) { return 'xcel_hist_' + (email || '').toLowerCase().trim(); }
+function getHistory() { const u = getUser(); if (!u) return []; try { return JSON.parse(localStorage.getItem(histKey(u.email)) || '[]'); } catch { return []; } }
+function saveHistory(h) { const u = getUser(); if (u) localStorage.setItem(histKey(u.email), JSON.stringify(h)); }
 
 // ── screen manager ──
 function showScreen(id) {
@@ -320,6 +321,7 @@ function updateUserChip(user) {
   const chip = document.getElementById('user-chip');
   chip.textContent = '👤 ' + user.name;
   chip.style.display = 'block';
+  document.getElementById('btn-history').style.display = 'block';
 }
 
 // ── profile ──
@@ -549,6 +551,7 @@ function manualSendEmail() {
 // ── History screen ──
 function showHistory() {
   const user = getUser();
+  if (!user) { showScreen('profile-screen'); return; }
   const hist = getHistory();
 
   const info = document.getElementById('history-user-info');
