@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trắc Nghiệm Data Analytics — hub.xcel.vn</title>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -195,7 +194,11 @@
         <label>Email *</label>
         <input type="email" id="input-email" placeholder="email@congty.com" autocomplete="email">
       </div>
-      <p class="form-note">📧 Sau khi làm bài, kết quả sẽ được gửi tự động về email của bạn và quản lý.</p>
+      <div class="form-group">
+        <label>Số điện thoại *</label>
+        <input type="tel" id="input-phone" placeholder="0901 234 567" autocomplete="tel">
+      </div>
+      <p class="form-note">📧 Sau khi làm bài, bạn có thể gửi kết quả về email của mình chỉ với 1 click.</p>
       <button class="btn-primary" onclick="saveProfile()">Tiếp tục →</button>
     </div>
   </div>
@@ -275,15 +278,7 @@
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// CONFIG — Điền vào sau khi tạo tài khoản EmailJS.com (miễn phí, 200 email/tháng)
-// ══════════════════════════════════════════
-const EMAIL_CFG = {
-  publicKey:   '',   // VD: 'abc123XYZ'
-  serviceId:   '',   // VD: 'service_gmail'
-  templateId:  '',   // VD: 'template_quiz_result'
-  toEmail:     'giang@xcel.vn'
-};
+const CC_EMAIL = 'giang@xcel.vn';
 
 // ══════════════════════════════════════════
 // QUIZ DATA
@@ -331,9 +326,11 @@ function updateUserChip(user) {
 function saveProfile() {
   const name = document.getElementById('input-name').value.trim();
   const email = document.getElementById('input-email').value.trim();
+  const phone = document.getElementById('input-phone').value.trim();
   if (!name) { alert('Vui lòng nhập họ tên.'); return; }
   if (!email || !email.includes('@')) { alert('Vui lòng nhập email hợp lệ.'); return; }
-  const user = { name, email };
+  if (!phone) { alert('Vui lòng nhập số điện thoại.'); return; }
+  const user = { name, email, phone };
   saveUser(user);
   updateUserChip(user);
   showScreen('intro-screen');
@@ -344,6 +341,7 @@ function changeProfile() {
   if (user) {
     document.getElementById('input-name').value = user.name;
     document.getElementById('input-email').value = user.email;
+    document.getElementById('input-phone').value = user.phone || '';
   }
   showScreen('profile-screen');
 }
@@ -494,62 +492,58 @@ function showResult(r) {
 function retryQuiz() { startQuiz(); }
 function backToIntro() { showScreen('intro-screen'); }
 
-// ── Email ──
-function buildEmailParams(r) {
-  const user = getUser() || { name: 'Ẩn danh', email: '' };
-  const wrongText = r.wrongList.length === 0 ? 'Tất cả đúng!' :
-    r.wrongList.map(w => `Câu ${w.id}: Chọn ${w.your} → Đúng: ${w.correct} (${w.correct_text})`).join('\n');
-  return {
-    to_email: EMAIL_CFG.toEmail,
-    user_email: user.email,
-    user_name: user.name,
-    de_name: r.deName,
-    score: r.score,
-    total: r.total,
-    pct: r.pct,
-    title: r.title,
-    date: r.date,
-    wrong_count: r.wrongList.length,
-    wrong_details: wrongText,
-    reply_to: user.email
-  };
+// ── Email (mailto — không cần backend) ──
+function buildMailto(r) {
+  const user = getUser() || { name: '', email: '', phone: '' };
+  const wrongText = r.wrongList.length === 0
+    ? '(Tất cả câu đúng!)'
+    : r.wrongList.map(w => `  - Câu ${w.id}: Bạn chọn ${w.your} → Đáp án đúng: ${w.correct} (${w.correct_text})`).join('%0A');
+
+  const subject = encodeURIComponent(`[Kết quả Test] ${user.name} - ${r.deName} - ${r.score}/${r.total} (${r.pct}%)`);
+  const body = [
+    `Xin chào ${user.name},`,
+    ``,
+    `Dưới đây là kết quả bài test của bạn:`,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `Họ tên   : ${user.name}`,
+    `Email    : ${user.email}`,
+    `SĐT      : ${user.phone}`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `Đề thi   : ${r.deName}`,
+    `Điểm     : ${r.score}/${r.total} câu (${r.pct}%)`,
+    `Đánh giá : ${r.title}`,
+    `Thời gian: ${r.date}`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━`,
+    ``,
+    `Chi tiết câu sai (${r.wrongList.length} câu):`,
+    wrongText,
+    ``,
+    `Chúc bạn học tốt!`,
+    `Cô Giang Xcel — xcel.vn`,
+  ].join('%0A');
+
+  return `mailto:${user.email}?cc=${CC_EMAIL}&subject=${subject}&body=${body}`;
 }
 
-async function autoSendEmail(r) {
-  if (!EMAIL_CFG.publicKey) return;
+function sendEmail(r) {
+  const a = document.createElement('a');
+  a.href = buildMailto(r);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function autoSendEmail(r) {
+  // Hiện nút gửi email nổi bật sau khi nộp bài — không tự mở để tránh popup bị chặn
   const st = document.getElementById('email-status');
-  st.className = 'email-status sending'; st.textContent = '📧 Đang gửi báo cáo...'; st.style.display = 'block';
-  try {
-    emailjs.init(EMAIL_CFG.publicKey);
-    await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, buildEmailParams(r));
-    st.className = 'email-status sent'; st.textContent = '✅ Báo cáo đã gửi đến giang@xcel.vn';
-  } catch(e) {
-    st.style.display = 'none';
-  }
+  st.className = 'email-status sent';
+  st.textContent = '✅ Bài đã chấm xong! Nhấn nút bên dưới để gửi kết quả về email của bạn.';
+  st.style.display = 'block';
 }
 
-async function manualSendEmail() {
-  const r = currentResult;
-  if (!r) return;
-  const user = getUser() || { name: '', email: '' };
-
-  if (EMAIL_CFG.publicKey) {
-    const btn = document.getElementById('btn-send-email');
-    btn.disabled = true; btn.textContent = '⏳ Đang gửi...';
-    const st = document.getElementById('email-status');
-    st.className = 'email-status sending'; st.textContent = '📧 Đang gửi...'; st.style.display = 'block';
-    try {
-      emailjs.init(EMAIL_CFG.publicKey);
-      await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, buildEmailParams(r));
-      st.className = 'email-status sent'; st.textContent = '✅ Đã gửi thành công!';
-    } catch { st.style.display = 'none'; }
-    btn.disabled = false; btn.textContent = '📧 Gửi lại';
-  } else {
-    // Fallback: mailto
-    const wrongText = r.wrongList.map(w => `- Câu ${w.id}: chọn ${w.your}, đúng: ${w.correct}`).join('%0A');
-    const body = `Tên: ${user.name}%0AEmail: ${user.email}%0AĐề: ${r.deName}%0AĐiểm: ${r.score}/${r.total} (${r.pct}%)%0AThời gian: ${r.date}%0A%0ACâu sai:%0A${wrongText}`;
-    window.location.href = `mailto:${EMAIL_CFG.toEmail}?subject=[Kết quả test] ${user.name} - ${r.deName} - ${r.score}/${r.total}&body=${body}`;
-  }
+function manualSendEmail() {
+  if (currentResult) sendEmail(currentResult);
 }
 
 // ── History screen ──
@@ -559,7 +553,7 @@ function showHistory() {
 
   const info = document.getElementById('history-user-info');
   if (user) {
-    info.innerHTML = `<div><strong>${user.name}</strong> · <span style="color:var(--muted);font-size:13px">${user.email}</span></div>
+    info.innerHTML = `<div><strong>${user.name}</strong> · <span style="color:var(--muted);font-size:13px">${user.email}</span>${user.phone ? ` · <span style="color:var(--muted);font-size:13px">${user.phone}</span>` : ''}</div>
       <div style="display:flex;gap:8px">
         <span style="font-size:13px;color:var(--muted)">${hist.length} bài đã làm</span>
         <button class="btn-sm btn-danger-sm" onclick="clearHistory()">🗑 Xóa tất cả</button>
@@ -598,23 +592,10 @@ function showHistory() {
   showScreen('history-screen');
 }
 
-async function sendHistoryEmail(idx) {
+function sendHistoryEmail(idx) {
   const hist = getHistory();
   const r = hist[idx];
-  if (!r) return;
-
-  if (EMAIL_CFG.publicKey) {
-    try {
-      emailjs.init(EMAIL_CFG.publicKey);
-      await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, buildEmailParams(r));
-      alert('✅ Đã gửi báo cáo thành công!');
-    } catch { alert('Gửi thất bại. Vui lòng thử lại.'); }
-  } else {
-    const user = getUser() || { name: '', email: '' };
-    const wrongText = (r.wrongList || []).map(w => `- Câu ${w.id}: chọn ${w.your}, đúng: ${w.correct}`).join('%0A');
-    const body = `Tên: ${user.name}%0AEmail: ${user.email}%0AĐề: ${r.deName}%0AĐiểm: ${r.score}/${r.total} (${r.pct}%)%0AThời gian: ${r.date}%0A%0ACâu sai:%0A${wrongText || 'Không có'}`;
-    window.location.href = `mailto:${EMAIL_CFG.toEmail}?subject=[Kết quả test] ${user.name} - ${r.deName} - ${r.score}/${r.total}&body=${body}`;
-  }
+  if (r) sendEmail(r);
 }
 
 function deleteHistoryItem(idx) {
