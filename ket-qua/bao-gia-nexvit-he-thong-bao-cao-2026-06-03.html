@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Báo Giá Hệ Thống Báo Cáo & Dashboard — NEXVIT × Xcel Analytics</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Be Vietnam Pro', 'sans-serif'] },
+        colors: {
+          brand: { 50:'#f5f3ff', 100:'#ede9fe', 200:'#ddd6fe', 400:'#a78bfa', 600:'#7c3aed', 700:'#6d28d9', 800:'#5b21b6', 900:'#4c1d95', 950:'#2e1065' },
+          navy: '#1e1b4b',
+          ink: { DEFAULT:'#1a1033', muted:'#6b7280', light:'#9ca3af' },
+          bg: { page:'#faf9ff', card:'#ffffff', accent:'#f5f3ff' },
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Be Vietnam Pro', sans-serif; background: #faf9ff; color: #1a1033; }
+  .gradient-bar { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 55%, #6d28d9 100%); }
+  .section-header { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 55%, #6d28d9 100%); }
+  .item-row:nth-child(even) { background: #f5f3ff; }
+  .item-row:hover { background: #ede9fe; transition: background .15s; }
+  .total-row { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 55%, #6d28d9 100%); }
+  .summary-row:nth-child(odd) { background: #f5f3ff; }
+  @media print {
+    body { background: #fff !important; }
+    .no-print { display: none !important; }
+    .print-page { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 24px !important; max-width: 100% !important; }
+    @page { margin: 8mm; size: A4; }
+    .item-row:nth-child(even) { background: #f5f3ff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .gradient-bar, .section-header, .total-row { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page-break { page-break-before: always; }
+  }
+</style>
+</head>
+<body class="min-h-screen py-8 px-4">
+
+<!-- Actions -->
+<div class="no-print flex justify-center mb-6 gap-3">
+  <button onclick="window.print()" class="flex items-center gap-2 bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow transition-all">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+    In / Xuất PDF
+  </button>
+  <a href="../hub-landing.html" class="flex items-center gap-2 bg-white hover:bg-gray-50 text-ink border border-gray-200 text-sm font-medium px-5 py-2.5 rounded-xl shadow-sm transition-all">
+    ← Quay lại Hub
+  </a>
+</div>
+
+<!-- Document -->
+<div class="print-page max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+
+  <!-- Header -->
+  <div class="gradient-bar px-10 py-9">
+    <div class="flex items-start justify-between gap-6">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center border border-white/25">
+            <svg viewBox="0 0 32 32" fill="none" class="w-7 h-7">
+              <path d="M6 6 L16 16 L26 6 M6 26 L16 16 L26 26" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="text-white font-bold text-2xl tracking-tight">Xcel Analytics</span>
+        </div>
+        <p class="text-purple-200 text-sm">hub.xcel.vn · giang@xcel.vn</p>
+        <p class="text-purple-200 text-sm">Hotline: 0983 999 886</p>
+        <div class="mt-4 inline-block bg-white/10 border border-white/20 rounded-lg px-4 py-2">
+          <p class="text-white/70 text-xs font-semibold uppercase tracking-widest mb-0.5">Người lập</p>
+          <p class="text-white font-semibold text-sm">Đoàn Thị Hương Giang — Cô Giang Xcel</p>
+        </div>
+      </div>
+      <div class="text-right shrink-0">
+        <div class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-1">Báo Giá Dịch Vụ</div>
+        <div class="text-white font-extrabold text-3xl tracking-tight">#BG-NV-2026-001</div>
+        <div class="text-purple-200 text-sm mt-2">Ngày lập: 03/06/2026</div>
+        <div class="text-purple-200 text-sm">Hiệu lực: 03/08/2026</div>
+        <div class="mt-3 bg-yellow-400/20 border border-yellow-300/30 rounded-lg px-3 py-1.5">
+          <p class="text-yellow-200 text-xs font-semibold uppercase tracking-wide">Phiên bản</p>
+          <p class="text-white font-bold">v2 — Cập nhật</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project title + client -->
+  <div class="px-10 py-7 border-b border-gray-100 bg-brand-50">
+    <h1 class="text-2xl font-extrabold text-navy mb-1 tracking-tight">Hệ Thống Báo Cáo & Dashboard Tự Động</h1>
+    <p class="text-ink-muted text-sm mb-5">Xây dựng hệ thống báo cáo tự động kết nối MISA · CRM · Tồn kho — phân quyền theo chức danh</p>
+    <div class="grid grid-cols-2 gap-4 text-sm">
+      <div class="bg-white rounded-xl border border-brand-100 px-5 py-4">
+        <p class="text-ink-muted text-xs uppercase font-bold tracking-wide mb-2">Khách hàng</p>
+        <p class="font-bold text-navy text-base">NEXVIT</p>
+        <p class="text-ink-muted text-xs mt-1">Công ty / Tổ chức</p>
+      </div>
+      <div class="bg-white rounded-xl border border-brand-100 px-5 py-4">
+        <p class="text-ink-muted text-xs uppercase font-bold tracking-wide mb-2">Phạm vi dự án</p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="bg-brand-100 text-brand-700 text-xs font-semibold px-2.5 py-1 rounded-full">N1 · Bán hàng & Công nợ phải thu</span>
+          <span class="bg-brand-100 text-brand-700 text-xs font-semibold px-2.5 py-1 rounded-full">N2 · Hàng hóa & Công nợ NCC</span>
+          <span class="bg-brand-100 text-brand-700 text-xs font-semibold px-2.5 py-1 rounded-full">N3 · Dòng tiền</span>
+          <span class="bg-brand-100 text-brand-700 text-xs font-semibold px-2.5 py-1 rounded-full">N4 · Tổng hợp lãnh đạo P&L</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ N1: BÁN HÀNG & CÔNG NỢ PHẢI THU ═══ -->
+  <div class="px-10 pt-8 pb-4">
+    <div class="section-header rounded-xl px-6 py-4 mb-5 flex items-center justify-between">
+      <div>
+        <span class="text-white/60 text-xs font-bold uppercase tracking-widest">Nhóm 1</span>
+        <h2 class="text-white font-extrabold text-xl mt-0.5">Bán hàng & Công nợ phải thu</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-white/60 text-xs font-semibold uppercase tracking-wide">Tổng nhóm</p>
+        <p class="text-white font-extrabold text-xl">24.600.000 đ</p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-100 overflow-hidden text-sm">
+      <!-- Table header -->
+      <div class="grid bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-ink-muted tracking-wide" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem">
+        <div class="px-3 py-3 text-center">#</div>
+        <div class="px-3 py-3">Loại</div>
+        <div class="px-3 py-3">Hạng mục / Template</div>
+        <div class="px-3 py-3">Đối tượng</div>
+        <div class="px-3 py-3 text-center">ĐVT / SL</div>
+        <div class="px-3 py-3 text-right">Đơn giá</div>
+        <div class="px-3 py-3 text-right">Thành tiền</div>
+      </div>
+      <!-- Items -->
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">1</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dữ liệu</div><div class="px-3 py-2.5 font-medium">Bảng mã khách hàng chuẩn</div><div class="px-3 py-2.5 text-ink-muted text-xs">Toàn hệ thống</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">300.000</div><div class="px-3 py-2.5 text-right font-semibold">300.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">2</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dữ liệu</div><div class="px-3 py-2.5 font-medium">Danh mục sản phẩm chuẩn</div><div class="px-3 py-2.5 text-ink-muted text-xs">Toàn hệ thống</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">300.000</div><div class="px-3 py-2.5 text-right font-semibold">300.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">3</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dữ liệu</div><div class="px-3 py-2.5 font-medium">Template xuất MISA cố định <span class="text-xs text-green-600 font-semibold">(gộp)</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Toàn hệ thống</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right text-ink-muted">—</div><div class="px-3 py-2.5 text-right font-semibold text-green-600">0</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">4</div><div class="px-3 py-2.5 text-amber-700 font-semibold">Cấu trúc</div><div class="px-3 py-2.5 font-medium">Mẫu File Hợp Đồng Trung Tâm<br><span class="text-xs text-ink-muted font-normal">1 HĐ = 1 dòng, ghi đủ điều kiện chiết khấu ngầm từng KH/SP</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 1 (BC2)</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">600.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">5</div><div class="px-3 py-2.5 text-blue-700 font-semibold">Kết nối</div><div class="px-3 py-2.5 font-medium">Kết nối & tự động hóa — Công nợ phải thu (MISA)<br><span class="text-xs text-ink-muted font-normal">CT CN theo HĐ + ĐH → chuẩn hóa mã KH, tính tuổi nợ 6 nhóm</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 1 (BC1)</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">600.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">6</div><div class="px-3 py-2.5 text-blue-700 font-semibold">Kết nối</div><div class="px-3 py-2.5 font-medium">Kết nối & tự động hóa — Doanh thu (MISA + CRM)<br><span class="text-xs text-ink-muted font-normal">Sổ CT bán hàng, BC thực thu, CRM Account + Doanh số</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 1 (BC2,3,4)</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">600.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">7</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Tự động</div><div class="px-3 py-2.5 font-medium">Phân quyền & Code VBA tự động<br><span class="text-xs text-ink-muted font-normal">Macro tự lọc & chia data khi mở file. Quy tắc nợ/DT ≤ 2 cho NV KD</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 1</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">8</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 1 · Mô phỏng báo cáo đầu ra<br><span class="text-xs text-ink-muted font-normal">7 Template báo cáo (dạng mockup demo)</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">9</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Bổ sung yêu cầu & Xác nhận dữ liệu đầu vào<br><span class="text-xs text-ink-muted font-normal">Xác nhận nguồn, chỉ số, quy tắc tính cho cả 4 BC</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 1</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">10</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 2 · Trình bày demo các báo cáo</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <!-- Templates -->
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">11</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 1 · NV Kinh Doanh <span class="text-xs bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded-full">×15</span><br><span class="text-xs text-ink-muted font-normal">BC1 Công nợ KH · BC3 KH rớt & doanh số · DT thực thu</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">15 NV KD</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">12</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 2 · KT Công Nợ<br><span class="text-xs text-ink-muted font-normal">BC1 CN toàn hệ thống · BC2 DT thực thu · Kế hoạch thu · Nhắc nợ</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Công Nợ</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">13</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 3 · KT Bán Hàng<br><span class="text-xs text-ink-muted font-normal">BC2 DT thuần MISA + thực thu · BC4 Đối chiếu CRM-MISA · Giá sau CK ngầm</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Bán Hàng</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">14</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 4 · Sale Admin<br><span class="text-xs text-ink-muted font-normal">BC3 Dashboard toàn sale/team · BC4 Đối chiếu · Cảnh báo đơn nháp · KH rớt</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Sale Admin</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">15</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 5 · QL Kinh Doanh<br><span class="text-xs text-ink-muted font-normal">BC2 DT thực tế theo team · BC3 Dashboard + tiến độ chỉ tiêu · BC4 Đối chiếu</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">QL Kinh Doanh</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">16</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 6 · KT Trưởng<br><span class="text-xs text-ink-muted font-normal">BC1+BC2+BC3+BC4 đầy đủ · Tổng hợp CN toàn công ty · Không phân quyền lọc</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Trưởng</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">17</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 7 · Lãnh Đạo<br><span class="text-xs text-ink-muted font-normal">BC1+BC2+BC3 tóm tắt · 1 trang KPI: DT + CN + KH rớt</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Lãnh Đạo</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">18</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Hoàn thiện & Cập nhật chỉnh sửa</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">19</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 3 · Trình bày & Hướng dẫn vận hành<br><span class="text-xs text-ink-muted font-normal">Gồm file hướng dẫn và video hướng dẫn đi kèm</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">20</div><div class="px-3 py-2.5 text-green-700 font-semibold">Bảo trì</div><div class="px-3 py-2.5 font-medium">Bảo trì sau go-live<br><span class="text-xs text-ink-muted font-normal">Fix lỗi · tinh chỉnh logic · cập nhật khi MISA/CRM thay đổi cấu trúc</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 1</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">tháng / 2</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">1.200.000</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ N2: HÀNG HÓA & CÔNG NỢ NCC ═══ -->
+  <div class="px-10 pt-6 pb-4">
+    <div class="section-header rounded-xl px-6 py-4 mb-5 flex items-center justify-between">
+      <div>
+        <span class="text-white/60 text-xs font-bold uppercase tracking-widest">Nhóm 2</span>
+        <h2 class="text-white font-extrabold text-xl mt-0.5">Hàng hóa & Công nợ NCC</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-white/60 text-xs font-semibold uppercase tracking-wide">Tổng nhóm</p>
+        <p class="text-white font-extrabold text-xl">19.400.000 đ</p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-100 overflow-hidden text-sm">
+      <div class="grid bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-ink-muted tracking-wide" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem">
+        <div class="px-3 py-3 text-center">#</div><div class="px-3 py-3">Loại</div><div class="px-3 py-3">Hạng mục / Template</div><div class="px-3 py-3">Đối tượng</div><div class="px-3 py-3 text-center">ĐVT / SL</div><div class="px-3 py-3 text-right">Đơn giá</div><div class="px-3 py-3 text-right">Thành tiền</div>
+      </div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">1</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dữ liệu</div><div class="px-3 py-2.5 font-medium">Bảng mã nhà cung cấp chuẩn<br><span class="text-xs text-ink-muted font-normal">Gom mã NCC từ MISA, chuẩn hóa tên + mã hàng NCC</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 2</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">300.000</div><div class="px-3 py-2.5 text-right font-semibold">300.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">2</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dữ liệu</div><div class="px-3 py-2.5 font-medium">Danh mục sản phẩm chuẩn<br><span class="text-xs text-ink-muted font-normal">Đồng bộ mã hàng / nhóm / ĐVT giữa MISA – tồn kho</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 2</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">300.000</div><div class="px-3 py-2.5 text-right font-semibold">300.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">3</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dữ liệu</div><div class="px-3 py-2.5 font-medium">Template xuất MISA cố định <span class="text-xs text-green-600 font-semibold">(gộp)</span><br><span class="text-xs text-ink-muted font-normal">BC Tồn Kho, CT CN NCC, Sổ mua hàng</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 2</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right text-ink-muted">—</div><div class="px-3 py-2.5 text-right font-semibold text-green-600">0</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">4</div><div class="px-3 py-2.5 text-blue-700 font-semibold">Kết nối</div><div class="px-3 py-2.5 font-medium">Kết nối & tự động hóa — Tồn kho & CN NCC (MISA)<br><span class="text-xs text-ink-muted font-normal">BC Tồn Kho, CT CN NCC, Sổ mua hàng → Stock Day, tuổi nợ, PO dự trù</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 2 (BC5,6)</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">600.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">5</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Tự động</div><div class="px-3 py-2.5 font-medium">Phân quyền & Code VBA tự động<br><span class="text-xs text-ink-muted font-normal">Phân quyền xem kho, CN NCC theo chức danh</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 2</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">6</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 1 · Mô phỏng đầu ra, chốt dữ liệu cần bổ sung</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">7</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Chốt dữ liệu đầu vào & Yêu cầu<br><span class="text-xs text-ink-muted font-normal">Xác nhận nguồn tồn kho, CN NCC, lịch PO, kế hoạch BH</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 2</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">8</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 2 · Trình bày demo các báo cáo</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">9</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 1 · KT Kho<br><span class="text-xs text-ink-muted font-normal">BC6 Tồn kho thực · Stock Day · Cảnh báo hết hàng + cận HSD</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Kho</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">10</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 2 · Phòng Mua Hàng<br><span class="text-xs text-ink-muted font-normal">BC5 Lịch chi NCC + tiến độ HĐ · BC6 PO dự trù tự động + lộ trình hàng về</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Phòng Mua Hàng</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">11</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 3 · KT Công Nợ (NCC)<br><span class="text-xs text-ink-muted font-normal">BC5 CN NCC tuổi nợ · Lịch chi theo tuần/tháng · Tiến độ HĐ NCC</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Công Nợ</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">12</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 4 · KT Trưởng<br><span class="text-xs text-ink-muted font-normal">BC5+BC6 tổng hợp đầy đủ · Dashboard hàng hóa & CN NCC</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Trưởng</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">13</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 5 · Lãnh Đạo<br><span class="text-xs text-ink-muted font-normal">BC5+BC6 tóm tắt · 1 trang: Tồn kho + Stock Day + CN NCC</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Lãnh Đạo</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">14</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Hoàn thiện & Cập nhật chỉnh sửa</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">15</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 3 · Trình bày & Hướng dẫn vận hành</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">16</div><div class="px-3 py-2.5 text-green-700 font-semibold">Bảo trì</div><div class="px-3 py-2.5 font-medium">Bảo trì sau go-live<br><span class="text-xs text-ink-muted font-normal">Fix lỗi · tinh chỉnh logic · cập nhật khi MISA/CRM thay đổi cấu trúc</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 2</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">tháng / 2</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">1.200.000</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ N3: DÒNG TIỀN ═══ -->
+  <div class="px-10 pt-6 pb-4 page-break">
+    <div class="section-header rounded-xl px-6 py-4 mb-5 flex items-center justify-between">
+      <div>
+        <span class="text-white/60 text-xs font-bold uppercase tracking-widest">Nhóm 3</span>
+        <h2 class="text-white font-extrabold text-xl mt-0.5">Dòng tiền</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-white/60 text-xs font-semibold uppercase tracking-wide">Tổng nhóm</p>
+        <p class="text-white font-extrabold text-xl">12.200.000 đ</p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-100 overflow-hidden text-sm">
+      <div class="grid bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-ink-muted tracking-wide" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem">
+        <div class="px-3 py-3 text-center">#</div><div class="px-3 py-3">Loại</div><div class="px-3 py-3">Hạng mục / Template</div><div class="px-3 py-3">Đối tượng</div><div class="px-3 py-3 text-center">ĐVT / SL</div><div class="px-3 py-3 text-right">Đơn giá</div><div class="px-3 py-3 text-right">Thành tiền</div>
+      </div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">1</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dữ liệu</div><div class="px-3 py-2.5 font-medium">Template xuất MISA cố định <span class="text-xs text-green-600 font-semibold">(gộp)</span><br><span class="text-xs text-ink-muted font-normal">Phải thu, phải trả, chi phí vận hành</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 3</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right text-ink-muted">—</div><div class="px-3 py-2.5 text-right font-semibold text-green-600">0</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">2</div><div class="px-3 py-2.5 text-blue-700 font-semibold">Kết nối</div><div class="px-3 py-2.5 font-medium">Kết nối & tự động hóa — Dòng tiền<br><span class="text-xs text-ink-muted font-normal">Gom N1+N2+chi phí → dự báo dòng tiền ròng theo tuần/tháng</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 3</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">3</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Chốt dữ liệu đầu vào & Yêu cầu<br><span class="text-xs text-ink-muted font-normal">Xác nhận phải thu (N1), phải trả (N2), chi phí vận hành</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 3</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">4</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 1 · Mô phỏng đầu ra, chốt dữ liệu cần bổ sung</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">5</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 2 · Demo báo cáo & Xác nhận yêu cầu chỉnh sửa</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">6</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 1 · KT Thanh Toán<br><span class="text-xs text-ink-muted font-normal">DS KH đến hạn + lịch chi NCC + chi phí vận hành + dự báo dòng tiền ròng</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Thanh Toán</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">7</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 2 · KT Trưởng<br><span class="text-xs text-ink-muted font-normal">Dòng tiền ròng tổng hợp theo tuần · Cảnh báo tuần âm</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Trưởng</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">8</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Phân tích</div><div class="px-3 py-2.5 font-medium">Phân tích Điểm hòa vốn <span class="text-xs text-green-600 font-semibold">(gộp trong N3)</span><br><span class="text-xs text-ink-muted font-normal">DT hòa vốn theo tháng/quý · So sánh vs thực tế · Tích hợp trong BC Dòng tiền</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Trưởng · LD</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right text-ink-muted">—</div><div class="px-3 py-2.5 text-right font-semibold text-green-600">0</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">9</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Hoàn thiện & Cập nhật chỉnh sửa</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">10</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 3 · Trình bày & Hướng dẫn vận hành</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">11</div><div class="px-3 py-2.5 text-green-700 font-semibold">Bảo trì</div><div class="px-3 py-2.5 font-medium">Bảo trì sau go-live<br><span class="text-xs text-ink-muted font-normal">Fix lỗi · tinh chỉnh logic · cập nhật khi MISA/CRM thay đổi cấu trúc</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 3</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">tháng / 2</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">1.200.000</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ N4: TỔNG HỢP LÃNH ĐẠO P&L ═══ -->
+  <div class="px-10 pt-6 pb-4">
+    <div class="section-header rounded-xl px-6 py-4 mb-5 flex items-center justify-between">
+      <div>
+        <span class="text-white/60 text-xs font-bold uppercase tracking-widest">Nhóm 4</span>
+        <h2 class="text-white font-extrabold text-xl mt-0.5">Tổng hợp lãnh đạo (P&L)</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-white/60 text-xs font-semibold uppercase tracking-wide">Tổng nhóm</p>
+        <p class="text-white font-extrabold text-xl">15.200.000 đ</p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-100 overflow-hidden text-sm">
+      <div class="grid bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-ink-muted tracking-wide" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem">
+        <div class="px-3 py-3 text-center">#</div><div class="px-3 py-3">Loại</div><div class="px-3 py-3">Hạng mục / Template</div><div class="px-3 py-3">Đối tượng</div><div class="px-3 py-3 text-center">ĐVT / SL</div><div class="px-3 py-3 text-right">Đơn giá</div><div class="px-3 py-3 text-right">Thành tiền</div>
+      </div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">1</div><div class="px-3 py-2.5 text-amber-700 font-semibold">Chuẩn hóa</div><div class="px-3 py-2.5 font-medium">Xử lý Cash report & Chuẩn hóa dữ liệu tổng hợp<br><span class="text-xs text-ink-muted font-normal">Làm sạch Cash report (~16.000 cột → chuẩn). Xác nhận P&L MISA + N1–N3 ổn định.</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Trưởng + LD</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">lần / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">2</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Chốt KPI lãnh đạo & Xác nhận yêu cầu<br><span class="text-xs text-ink-muted font-normal">Xác định chính xác chỉ số lãnh đạo muốn thấy — bắt buộc trước khi xây</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Trưởng + LD</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">3</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 1 · Mô phỏng đầu ra, chốt dữ liệu cần bổ sung</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">4</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 2 · Demo báo cáo & Xác nhận yêu cầu chỉnh sửa</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">5</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 1 · KT Trưởng<br><span class="text-xs text-ink-muted font-normal">Tổng hợp N1+N2+N3 → P&L đầy đủ theo tháng · Chi tiết từng nhóm chỉ tiêu</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">KT Trưởng</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100 bg-brand-50/50" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">6</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Template</div><div class="px-3 py-2.5 font-medium">Template 2 · Lãnh Đạo / GĐ<br><span class="text-xs text-ink-muted font-normal">1 trang 6 chỉ số chốt · Cảnh báo đỏ · Click xem chi tiết N1–N3</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Lãnh Đạo / GĐ</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">7</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Hoàn thiện & Cập nhật chỉnh sửa</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">8</div><div class="px-3 py-2.5 text-brand-700 font-semibold">Dashboard</div><div class="px-3 py-2.5 font-medium">Đưa lên Dashboard biểu đồ trực quan dữ liệu</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">file / 1</div><div class="px-3 py-2.5 text-right">2.000.000</div><div class="px-3 py-2.5 text-right font-semibold">2.000.000</div></div>
+      <div class="item-row grid border-b border-gray-100" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">9</div><div class="px-3 py-2.5 text-teal-700 font-semibold">Tư vấn</div><div class="px-3 py-2.5 font-medium">Buổi 3 · Trình bày & Hướng dẫn vận hành</div><div class="px-3 py-2.5 text-ink-muted text-xs">—</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">buổi / 1</div><div class="px-3 py-2.5 text-right">1.000.000</div><div class="px-3 py-2.5 text-right font-semibold">1.000.000</div></div>
+      <div class="item-row grid" style="grid-template-columns:2.5rem 1fr 2fr 1.5fr 5rem 6rem 7rem"><div class="px-3 py-2.5 text-center text-ink-muted font-semibold">10</div><div class="px-3 py-2.5 text-green-700 font-semibold">Bảo trì</div><div class="px-3 py-2.5 font-medium">Bảo trì sau go-live<br><span class="text-xs text-ink-muted font-normal">Fix lỗi · tinh chỉnh logic · cập nhật khi MISA/CRM thay đổi cấu trúc</span></div><div class="px-3 py-2.5 text-ink-muted text-xs">Nhóm 4</div><div class="px-3 py-2.5 text-center text-xs text-ink-muted">tháng / 2</div><div class="px-3 py-2.5 text-right">600.000</div><div class="px-3 py-2.5 text-right font-semibold">1.200.000</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ TỔNG HỢP CHI PHÍ ═══ -->
+  <div class="px-10 pt-6 pb-8">
+    <h2 class="text-navy font-extrabold text-xl mb-5 tracking-tight">Tổng hợp chi phí</h2>
+    <div class="rounded-xl border border-gray-100 overflow-hidden text-sm mb-6">
+      <div class="grid bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-ink-muted tracking-wide" style="grid-template-columns:4rem 1fr auto auto">
+        <div class="px-4 py-3">Nhóm</div><div class="px-4 py-3">Nội dung</div><div class="px-4 py-3 text-center">Số hạng mục</div><div class="px-4 py-3 text-right pr-6">Thành tiền</div>
+      </div>
+      <div class="summary-row grid border-b border-gray-100" style="grid-template-columns:4rem 1fr auto auto">
+        <div class="px-4 py-3 font-bold text-brand-700">N1</div>
+        <div class="px-4 py-3 font-semibold">Bán hàng & Công nợ phải thu</div>
+        <div class="px-4 py-3 text-center text-ink-muted">20</div>
+        <div class="px-4 py-3 text-right font-bold pr-6">24.600.000 đ</div>
+      </div>
+      <div class="summary-row grid border-b border-gray-100" style="grid-template-columns:4rem 1fr auto auto">
+        <div class="px-4 py-3 font-bold text-brand-700">N2</div>
+        <div class="px-4 py-3 font-semibold">Hàng hóa & Công nợ NCC</div>
+        <div class="px-4 py-3 text-center text-ink-muted">16</div>
+        <div class="px-4 py-3 text-right font-bold pr-6">19.400.000 đ</div>
+      </div>
+      <div class="summary-row grid border-b border-gray-100" style="grid-template-columns:4rem 1fr auto auto">
+        <div class="px-4 py-3 font-bold text-brand-700">N3</div>
+        <div class="px-4 py-3 font-semibold">Dòng tiền</div>
+        <div class="px-4 py-3 text-center text-ink-muted">11</div>
+        <div class="px-4 py-3 text-right font-bold pr-6">12.200.000 đ</div>
+      </div>
+      <div class="summary-row grid border-b border-gray-100" style="grid-template-columns:4rem 1fr auto auto">
+        <div class="px-4 py-3 font-bold text-brand-700">N4</div>
+        <div class="px-4 py-3 font-semibold">Tổng hợp lãnh đạo (P&L)</div>
+        <div class="px-4 py-3 text-center text-ink-muted">10</div>
+        <div class="px-4 py-3 text-right font-bold pr-6">15.200.000 đ</div>
+      </div>
+      <!-- Total row -->
+      <div class="total-row grid" style="grid-template-columns:4rem 1fr auto auto">
+        <div class="px-4 py-4 font-extrabold text-white text-base">TỔNG</div>
+        <div class="px-4 py-4 text-white/80 font-semibold text-sm">Toàn bộ dự án · 57 hạng mục</div>
+        <div class="px-4 py-4 text-center text-white/70 font-semibold">57</div>
+        <div class="px-4 py-4 text-right font-extrabold text-white text-xl pr-6">71.400.000 đ</div>
+      </div>
+    </div>
+
+    <!-- Amount in words + note -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl px-6 py-4 mb-6 flex items-start gap-3">
+      <span class="text-amber-500 text-lg mt-0.5">ℹ️</span>
+      <div>
+        <p class="font-bold text-amber-900 text-sm">Tổng cộng: 71.400.000 đồng (chưa VAT)</p>
+        <p class="text-amber-700 text-xs mt-1">Bằng chữ: <em>Bảy mươi mốt triệu bốn trăm nghìn đồng</em></p>
+        <p class="text-amber-600 text-xs mt-1">Các hạng mục ghi "0" hoặc "(gộp)" đã được tích hợp vào nhóm không phát sinh thêm phí.</p>
+      </div>
+    </div>
+
+    <!-- Điều khoản -->
+    <div class="grid grid-cols-2 gap-5 text-sm mb-6">
+      <div class="bg-bg-accent rounded-xl border border-brand-100 px-5 py-4">
+        <p class="text-xs font-bold uppercase tracking-wide text-brand-700 mb-3">Điều khoản thanh toán</p>
+        <div class="space-y-2 text-ink-muted text-xs">
+          <div class="flex gap-2"><span class="font-bold text-navy w-6">30%</span><span>Khi ký hợp đồng</span></div>
+          <div class="flex gap-2"><span class="font-bold text-navy w-6">40%</span><span>Sau khi trình bày demo (Buổi 2)</span></div>
+          <div class="flex gap-2"><span class="font-bold text-navy w-6">30%</span><span>Sau khi bàn giao & nghiệm thu</span></div>
+        </div>
+      </div>
+      <div class="bg-bg-accent rounded-xl border border-brand-100 px-5 py-4">
+        <p class="text-xs font-bold uppercase tracking-wide text-brand-700 mb-3">Cam kết dịch vụ</p>
+        <div class="space-y-1.5 text-ink-muted text-xs">
+          <div class="flex gap-2"><span class="text-green-600">✓</span><span>Bảo trì 2 tháng sau go-live mỗi nhóm</span></div>
+          <div class="flex gap-2"><span class="text-green-600">✓</span><span>Hỗ trợ online trong giờ hành chính</span></div>
+          <div class="flex gap-2"><span class="text-green-600">✓</span><span>Video hướng dẫn vận hành bàn giao kèm</span></div>
+          <div class="flex gap-2"><span class="text-green-600">✓</span><span>Báo giá có hiệu lực 60 ngày kể từ ngày lập</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bank info -->
+    <div class="bg-navy rounded-xl px-6 py-4 flex items-center justify-between gap-4">
+      <div>
+        <p class="text-white/60 text-xs font-semibold uppercase tracking-wide mb-1">Thanh toán chuyển khoản</p>
+        <p class="text-white font-bold">Công ty TNHH AZCEL Group</p>
+        <p class="text-purple-200 text-sm">MB Bank · STK: <span class="font-bold text-white">983 999 886</span></p>
+      </div>
+      <div class="text-right">
+        <p class="text-white/60 text-xs">Liên hệ</p>
+        <p class="text-white font-semibold text-sm">giang@xcel.vn</p>
+        <p class="text-purple-200 text-sm">0983 999 886</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="gradient-bar px-10 py-5 flex items-center justify-between text-sm">
+    <span class="text-white/70">Xcel Analytics · hub.xcel.vn</span>
+    <span class="text-white/70">Báo giá #BG-NV-2026-001 · Lập ngày 03/06/2026</span>
+    <span class="text-white/70">Cô Giang Xcel</span>
+  </div>
+
+</div>
+
+</body>
+</html>
